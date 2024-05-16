@@ -1,0 +1,9 @@
+{
+    "name": "crowdmark/dashboard",
+    "autoload": {
+        "psr-4": {
+            "CrowdmarkDashboard\\": "src"
+        }
+    }
+
+}
