@@ -4,8 +4,8 @@ namespace CrowdmarkDashboard;
 // include_once '../src/API.php';
 // include_once '../src/Question.php';
 use CrowdmarkDashboard\API;
-use CrowdmarkDashboard\Question;
 use CrowdmarkDashboard\Booklet;
+use CrowdmarkDashboard\Question;
 
 class Assessment{
     protected string $assessment_id;
@@ -40,8 +40,8 @@ class Assessment{
         $this->setQuestions($assessment_id);
         $this->setBooklets($assessment_id);
         $this->setTotalCounts();
+        $this->setGradedCounts();
     }
-
 
     public function setTotalCounts()
     {
@@ -49,13 +49,13 @@ class Assessment{
 
             if ($booklet->getResponsesCount() > 0) {
                 $this->uploaded_count += 1;
-
-                foreach($booklet->getResponses() as $response) {
-                    if ($response->status == "graded") {
-                        $this->graded_counts[$response->question_label] += 1;
-                    }
-                }
             }
+            //     foreach($booklet->getResponses() as $response) {
+            //         if ($response->status == "graded") {
+            //             $this->graded_counts[$response->question_label] += 1;
+            //         }
+            //     }
+            // }
 
             if ($booklet->getEnrollmentId() !== "NA") {
                 $this->matched_count += 1;
@@ -70,6 +70,20 @@ class Assessment{
          foreach ($response->data as $question) {
              $this->questions[] = new Question($question);
          }
+    }
+
+    public function setGradedCounts()
+    {
+        foreach($this->questions as $question) {
+            //die('api/questions/' . $question->getQuestionId() . '/responses');
+            $api = new API('api/questions/' . $question->getQuestionId() . '/responses');
+            $response = $api->getResponse();
+            foreach ($response->data as $data) {
+                if ($data->type == "response" && $data->attributes->status == "graded"){
+                    $this->graded_counts[$question->question_sequence_number . "-" .$question->question_name] += 1;
+                }
+            }
+        }   
     }
 
     public function setBooklets($assessment_id)

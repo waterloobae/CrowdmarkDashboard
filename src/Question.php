@@ -23,4 +23,9 @@ class Question{
         $temp = "created-at";
         $this->created_at = $question->attributes->$temp;
     }
+
+    public function getQuestionId()
+    {
+        return $this->question_id;
+    }
 }

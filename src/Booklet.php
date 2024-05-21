@@ -26,7 +26,8 @@ class Booklet{
         $this->responses_count = $booklet->relationships->responses->meta->count;
         $this->booklet_link = $booklet->links->self;
 
-        $this->setResponses();
+        //Responses are calculated in the assessment class to seep up the process
+        //$this->setResponses();
     }
     
     public function setResponses()
