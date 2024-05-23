@@ -28,7 +28,8 @@ class Assessment{
         $this->assessment_id = $assessment_id;
 
         $this->end_point = 'api/assessments/' . $assessment_id;
-        $api = new API($this->end_point);
+        $api = new API();
+        $api->exec($this->end_point);
         $this->response = $api->getResponse();
         $this->assessment_name = $this->response->data->attributes->title;
         $this->booklet_count = $this->response->data->relationships->booklets->meta->count;
@@ -49,13 +50,13 @@ class Assessment{
 
             if ($booklet->getResponsesCount() > 0) {
                 $this->uploaded_count += 1;
+            
+                // if ($response->status == "graded") {
+                //         foreach($booklet->getResponses() as $response) {
+                //         $this->graded_counts[$response->question_label] += 1;
+                //     }
+                // }
             }
-            //     foreach($booklet->getResponses() as $response) {
-            //         if ($response->status == "graded") {
-            //             $this->graded_counts[$response->question_label] += 1;
-            //         }
-            //     }
-            // }
 
             if ($booklet->getEnrollmentId() !== "NA") {
                 $this->matched_count += 1;
@@ -65,7 +66,8 @@ class Assessment{
 
     public function setQuestions($assessment_id)
     {
-         $api = new API('api/assessments/' . $assessment_id . '/questions');
+         $api = new API();
+         $api->exec('api/assessments/' . $assessment_id . '/questions');
          $response = $api->getResponse();
          foreach ($response->data as $question) {
              $this->questions[] = new Question($question);
@@ -74,13 +76,29 @@ class Assessment{
 
     public function setGradedCounts()
     {
-        foreach($this->questions as $question) {
-            //die('api/questions/' . $question->getQuestionId() . '/responses');
-            $api = new API('api/questions/' . $question->getQuestionId() . '/responses');
-            $response = $api->getResponse();
-            foreach ($response->data as $data) {
+
+        foreach($this->booklets as $booklet){
+            $end_points[] = 'api/booklets/' . $booklet->getBookletId() . '/responses';
+        }
+
+        $api = new API();
+        $api->multiExec($end_points);
+        $responses = $api->getResponses();
+
+        foreach($responses as $response){
+            // echo "==== Response Debug ====<br>";
+            // echo("<pre>");
+            // var_dump($response->data);
+            // echo("</pre>");
+
+             foreach ($response->data as $data) {
                 if ($data->type == "response" && $data->attributes->status == "graded"){
-                    $this->graded_counts[$question->question_sequence_number . "-" .$question->question_name] += 1;
+
+                    $temp = $data->relationships->question->links->self;
+                    $items = explode("/", $temp);
+                    $question_label = end($items);
+
+                    $this->graded_counts[$question_label] += 1;
                 }
             }
         }   
@@ -91,8 +109,14 @@ class Assessment{
         $self_link = 'api/assessments/' . $assessment_id . '/booklets';
 
         do {
-            $api = new API($self_link);
+            $api = new API();
+            $api->exec($self_link);
             $response = $api->getResponse();
+            // echo "==== Booklet Debug ====<br>";
+            // echo("<pre>");
+            // var_dump($response->data);
+            // echo("</pre>");
+
             foreach ($response->data as $booklet) {
                 $this->booklets[] = new Booklet($booklet);
             }

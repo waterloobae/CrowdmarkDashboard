@@ -26,13 +26,12 @@ class Booklet{
         $this->responses_count = $booklet->relationships->responses->meta->count;
         $this->booklet_link = $booklet->links->self;
 
-        //Responses are calculated in the assessment class to seep up the process
-        //$this->setResponses();
     }
     
-    public function setResponses()
+    public function setResponsesByAPI()
     {
-        $api = new API($this->responses_link);
+        $api = new API();
+        $api->exec($this->responses_link);
         $response = $api->getResponse();
         foreach ($response->data as $response) {
             $this->responses[] = new Response($response);
@@ -57,5 +56,10 @@ class Booklet{
     public function getResponsesCount()
     {
         return $this->responses_count;
+    }
+
+    public function getBookletId()
+    {
+        return $this->booklet_id;
     }
 }

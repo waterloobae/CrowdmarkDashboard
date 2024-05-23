@@ -19,7 +19,8 @@ class Course{
         $this->course_id = $course_id;
 
         $this->end_point = 'api/courses/' . $course_id;
-        $api = new API($this->end_point);
+        $api = new API();
+        $api->exec($this->end_point);
         $this->response = $api->getResponse();
         $this->course_name = $this->response->data->attributes->name;
 
@@ -33,7 +34,8 @@ class Course{
 
     public function setAssessment($course_id)
     {
-         $api = new API('api/courses/' . $course_id . '/assessments');
+         $api = new API();
+         $api->exec('api/courses/' . $course_id . '/assessments');
          $response = $api->getResponse();
          foreach ($response->data as $assessment) {
              $this->assessments[] = new Assessment($assessment->id);

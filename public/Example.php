@@ -5,7 +5,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use CrowdmarkDashboard\Course;
 
 echo("Start Time1:" . date("Y-m-d H:i:s") . "<br>");
-$course1 = new Course('euclid-b-2024');
+$course1 = new Course('euclid-d-2024');
 //$course2 = new Course('euclid-flex-2024-9a7cc');
 
 echo("Start Time2:" . date("Y-m-d H:i:s") . "<br>");
