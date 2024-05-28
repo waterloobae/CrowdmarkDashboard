@@ -10,13 +10,14 @@ $course1 = new Course('euclid-d-2024');
 
 echo("Start Time2:" . date("Y-m-d H:i:s") . "<br>");
 
-// foreach($course1->getAssessments() as $assessment) {
-//     echo("Uploaded :". $assessment->getUploadedCount() . "<br>");
-//     echo("Matched :". $assessment->getMatchedCount() . "<br>");
-//     echo("<pre>");
-//     var_dump($assessment->getGradedCounts());
-//     echo("</pre>");
-// }
+foreach($course1->getAssessments() as $assessment) {
+    echo("Uploaded :". $assessment->getUploadedCount() . "<br>");
+    echo("Matched :". $assessment->getMatchedCount() . "<br>");
+    echo("<pre>");
+    var_dump($assessment->getGradedCounts());
+    echo("</pre>");
+}
+
 echo("End Time:" . date("Y-m-d H:i:s") . "<br>");
 
 echo("<pre>");

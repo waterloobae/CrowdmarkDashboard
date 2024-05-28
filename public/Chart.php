@@ -58,7 +58,7 @@ $chart3 = <<<CHARTTHREE
       },
       {
         label: '# of Not Graded',
-        data: [12, 19, 3, 5, 2, 3],
+        data: [20, 29, 13, 15, 12, 13],
         borderWidth: 1
       }]
     },
@@ -70,7 +70,7 @@ $chart3 = <<<CHARTTHREE
             stacked: true,
           },
           y: {
-            stacked: true
+            stacked: true,
           }
       }
     }

@@ -28,4 +28,14 @@ class Question{
     {
         return $this->question_id;
     }
+
+    public function getQuestionName()
+    {
+        return $this->question_name;
+    }
+
+    public function getQuestionSequenceNumber()
+    {
+        return $this->question_sequence_number;
+    }
 }

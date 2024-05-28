@@ -41,7 +41,8 @@ class Assessment{
         $this->setQuestions($assessment_id);
         $this->setBooklets($assessment_id);
         $this->setTotalCounts();
-        $this->setGradedCounts();
+        $this->setGradedCountsFromBooklets();
+        //$this->setGradedCountsFromQuestions();
     }
 
     public function setTotalCounts()
@@ -74,8 +75,65 @@ class Assessment{
          }
     }
 
-    public function setGradedCounts()
+    // public function setGradedCountsFromQuestions()
+    // {
+    //     // This will be faster than setGradedCountsFromBooklets, but
+    //     // 504 Gateway Time-out error will occur since there are too many booklets
+    //     foreach($this->questions as $question){
+    //         $end_points[] = 'api/questions/' . $question->getQuestionId() . '/responses';
+    //     }
+
+    //     $api = new API();
+    //     $api->multiExec($end_points);
+    //     $responses = $api->getResponses();
+
+    //     foreach($responses as $response){
+
+    //          foreach ($response->data as $data) {
+    //             if ($data->type == "response" && $data->attributes->status == "graded"){
+
+    //                 $temp = $data->relationships->question->links->self;
+    //                 $items = explode("/", $temp);
+    //                 $question_label = end($items);
+
+    //                 $this->graded_counts[$question_label] += 1;
+    //             }
+    //         }
+    //     }   
+    // }
+
+
+    public function setGradedCountsFromQuestions()
     {
+        // This will be faster than setGradedCountsFromBooklets, but
+        // 504 Gateway Time-out error will occur since there are too many booklets
+        foreach($this->questions as $question){
+            $end_point = 'api/questions/' . $question->getQuestionId() . '/responses';
+
+            $api = new API();
+            $api->exec($end_point);
+            $response = $api->getResponse();
+
+            foreach ($response->data as $data) {
+                if ($data->type == "response" && $data->attributes->status == "graded"){
+                    $temp = $data->relationships->question->links->self;
+                    $items = explode("/", $temp);
+                    $question_label = end($items);
+                    $this->graded_counts[$question_label] += 1;
+                }
+            }
+        }
+    }
+
+
+
+    public function setGradedCountsFromBooklets()
+    {
+
+        foreach($this->questions as $question){
+            $sequence[ $question->getQuestionName() ] = $question->getQuestionSequenceNumber();
+            $this->graded_counts[$question->getQuestionSequenceNumber()] = 0;
+        }
 
         foreach($this->booklets as $booklet){
             $end_points[] = 'api/booklets/' . $booklet->getBookletId() . '/responses';
@@ -91,17 +149,20 @@ class Assessment{
             // var_dump($response->data);
             // echo("</pre>");
 
-             foreach ($response->data as $data) {
+             foreach ($response as $data) {
                 if ($data->type == "response" && $data->attributes->status == "graded"){
-
                     $temp = $data->relationships->question->links->self;
                     $items = explode("/", $temp);
                     $question_label = end($items);
-
-                    $this->graded_counts[$question_label] += 1;
+                    $this->graded_counts[$sequence[$question_label]] += 1;
                 }
             }
-        }   
+        }
+        
+        // Sorting by sequence number
+        ksort($this->graded_counts, 1);
+        
+
     }
 
     public function setBooklets($assessment_id)
