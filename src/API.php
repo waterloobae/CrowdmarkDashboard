@@ -50,28 +50,31 @@ class API
        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
        
        set_time_limit(300);
-       //$response = curl_exec($curl);
+
        do {
            $response = curl_exec($curl);
-       
            if (json_decode($response) === null) {
                $this->current_try++;
                 $this->consoleLog("Attempt $this->current_try failed. Retrying...");
 
-               sleep(2); // Optional: wait 2 seconds before retrying
+               sleep(1.1); // Optional: wait 1.1 seconds before retrying
            }
-       } while (json_decode($response) === null && $this->current_try < $this->max_retries);
+       } while ( (json_decode($response) === null ||
+                    array_key_exists('errors',json_decode($response, true)))
+                    && $this->current_try < $this->max_retries);
        curl_close($curl);
 
         try {
-            if(json_decode($response) !== null){
+            if( json_decode($response) !== null && 
+                !array_key_exists('errors',json_decode($response, true))){
                 $this->api_response = json_decode($response);
             }else{
-                throw new Exception("API call returned non JSON response.");
+                throw new Exception("API call returned non JSON response or Errors were returned from Crowdmark.");
             }
         }
         catch(Exception $msg){
                 $this->consoleLog("Exception: ". $msg);
+                die("Exception: ". $msg);
         }
     }
 
