@@ -31,6 +31,8 @@ class Assessment{
         $api = new API();
         $api->exec($this->end_point);
         $this->response = $api->getResponse();
+
+
         $this->assessment_name = $this->response->data->attributes->title;
         $this->booklet_count = $this->response->data->relationships->booklets->meta->count;
 
@@ -134,6 +136,12 @@ class Assessment{
             $sequence[ $question->getQuestionName() ] = $question->getQuestionSequenceNumber();
             $this->graded_counts[$question->getQuestionSequenceNumber()] = 0;
         }
+
+        echo "==== Response Debug ====<br>";
+        echo("<pre>");
+        var_dump($sequence);
+        echo("</pre>");
+
 
         foreach($this->booklets as $booklet){
             $end_points[] = 'api/booklets/' . $booklet->getBookletId() . '/responses';

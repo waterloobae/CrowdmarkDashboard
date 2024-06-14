@@ -80,7 +80,7 @@ class API
     public function multiExec(array $big_end_points){
         ini_set('memory_limit', '1024M');
         $batch_size = 10;
-        $interval = 1;
+        $interval = 0;
 
         $batches = array_chunk($big_end_points, $batch_size);
         // Give the server a break
