@@ -140,34 +140,23 @@ $html = <<<HTML
     </script>    
     <style>
         @import url('../src/css/light.css');
-        .canvas-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px; /* Optional: add spacing between canvases */
-        }
-        .canvas-container canvas, div {
-            width: 100%; /* Ensure canvases take up full grid cell width */
-        }
-        .material-symbols-outlined {
-          font-variation-settings:
-          'FILL' 0,
-          'wght' 400,
-          'GRAD' 0,
-          'opsz' 24
-        }
-
-
+        @import url('../src/css/dashboard.css');
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
 
 <div class="canvas-container">
   <!--
     -->
-        <div id="contest_name" width="200" height="200" style="border:1px solid #000000;">
-          <span>Euclid A 2024</span>
+        <div class="card">
+          <div class="title">Euclid A 2024</div>
+          <div class="content">Uploaded Booklets:</div>
+          <div class="subtitle">2,123</div>
+
         </div>
+
         <canvas id="canvas1" width="200" height="200" style="border:0px solid #000000;"></canvas>
         <canvas id="canvas2" width="200" height="200" style="border:0px solid #000000;"></canvas>
         <canvas id="canvas3" width="800" height="200" style="border:0px solid #000000;"></canvas>
