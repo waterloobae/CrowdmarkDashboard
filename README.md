@@ -7,7 +7,7 @@ Instead of using /api/questions/question_id/responses. Multi curls for /api/book
 
 Page.php needs to be coded.
 
-## Crowdmark API Calls
+## Crowdmark API Endpoints
 
 **GET courses**  
 `https://app.crowdmark.com/api/courses?api_key=your_api_key`
