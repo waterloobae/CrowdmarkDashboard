@@ -47,3 +47,16 @@ Page.php needs to be coded.
 
 **GET the second page of booklets**  
 `https://app.crowdmark.com/api/assessments/{assessment id}/booklets?page%5Bnumber%5D=2&api_key=your_api_key`
+
+## Class Structure
+
+```mermaid
+flowchart TD
+    n1["Dashboard"] --> n2["Crowdmark<br>"]
+    n2 --> n3["Course"]
+    n3 --> n4["Assessment"]
+    n4 --> n5["Booklet"] & n9["Question"]
+    n5 --> n6["Response"] & n7["Page"]
+    n6 --> n7 & n8["Score"]
+    n9 -- Times out often --> n6
+    
