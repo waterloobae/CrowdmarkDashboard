@@ -1,6 +1,6 @@
 <?php
 
-namespace CrowdmarkDashboard;
+namespace Waterloobae\CrowdmarkDashboard;
 // include_once '../src/API.php';
 // include_once '../src/Question.php';
 use CrowdmarkDashboard\API;

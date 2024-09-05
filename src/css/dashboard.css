@@ -1,9 +1,9 @@
 /* Card container */
 .card {
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px var(--md-sys-color-shadow);
     padding: 10px;
-    background-color: #fff;
+    background-color: var(--md-sys-color-on-primary);
     max-width: 180px;
     margin: 10px;
     font-family: Arial, sans-serif;
@@ -13,14 +13,14 @@
 .card .title {
     font-size: 1.5em;
     font-weight: bold;
-    color: #65558f;
+    color: var(--md-sys-color-primary);
     margin-bottom: 20px;
 }
 
 /* Card subtitle */
 .card .subtitle {
     font-size: 1.5em;
-    color: #666;
+    color: var(--md-sys-color-secondary);
     margin-bottom: 15px;
 }
 

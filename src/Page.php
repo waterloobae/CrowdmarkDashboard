@@ -1,4 +1,5 @@
 <?php
+namespace Waterloobae\CrowdmarkDashboard;
 
 //API End Point to use
 // Booklets/booklet_id/pages

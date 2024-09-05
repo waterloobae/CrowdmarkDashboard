@@ -1,8 +1,8 @@
 {
-    "name": "crowdmark/dashboard",
+    "name": "waterloobae/drowdmark-dashboard",
     "autoload": {
         "psr-4": {
-            "CrowdmarkDashboard\\": "src"
+            "Waterloobae\\CrowdmarkDashboard\\": "src"
         }
     }
 

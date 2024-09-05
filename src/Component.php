@@ -1,4 +1,5 @@
 <?php
+namespace Waterloobae\CrowdmarkDashboard;
 
 class Component {
     private $actions;

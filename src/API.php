@@ -1,6 +1,6 @@
 <?php
 
-namespace CrowdmarkDashboard;
+namespace Waterloobae\CrowdmarkDashboard;
 
 use Exception;
 

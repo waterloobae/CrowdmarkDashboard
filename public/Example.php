@@ -1,5 +1,5 @@
 <?php
-namespace CrowdmarkDashboard;
+namespace Waterloobae\CrowdmarkDashboard;
 require_once __DIR__ . '/../vendor/autoload.php';
 //include_once '../src/Course.php';
 use CrowdmarkDashboard\Course;
