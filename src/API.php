@@ -17,6 +17,8 @@ class API
     protected int $max_retries = 5;
     protected int $current_try = 0;
 
+    protected int $httpCode;
+
     public function __construct() 
     {
         // constructor
@@ -63,18 +65,30 @@ class API
        curl_close($curl);
        $this->current_try = 0;
 
-        try {
-            if( json_decode($response) !== null && 
-                !array_key_exists('errors',json_decode($response, true))){
+       $this->httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        if( json_decode($response) !== null && 
+            !array_key_exists('errors',json_decode($response, true)) &&
+            $this->httpCode == 200){
                 $this->api_response = json_decode($response);
-            }else{
-                throw new Exception("API call returned non JSON response or Errors were returned from Crowdmark.");
-            }
+        }else{
+            throw new Exception("API call returned non JSON response or Errors were returned from Crowdmark.");
         }
-        catch(Exception $msg){
-                $this->consoleLog("Exception: ". $msg);
-                die("Exception: ". $msg);
-        }
+
+        // try {
+        //     if( json_decode($response) !== null && 
+        //         !array_key_exists('errors',json_decode($response, true)) &&
+        //         $this->httpCode == 200){
+        //         $this->api_response = json_decode($response);
+        //     }else{
+        //         throw new Exception("API call returned non JSON response or Errors were returned from Crowdmark.");
+        //     }
+        // }
+        // catch(Exception $msg){
+        //         //$this->consoleLog("Exception: ". $msg);
+        //         //die("Exception: ". $msg);
+        //         //$this->api_response = [];
+        // }
     }
 
     public function multiExec(array $big_end_points){
@@ -148,7 +162,10 @@ class API
     {
         return $this->api_responses;
     }
-
+    public function getHttpCode()
+    {
+        return $this->httpCode;
+    }
     public function consoleLog($msg){
         $output = $msg;
         if (is_array($output))

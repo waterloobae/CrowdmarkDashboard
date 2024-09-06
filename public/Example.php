@@ -2,7 +2,7 @@
 namespace Waterloobae\CrowdmarkDashboard;
 require_once __DIR__ . '/../vendor/autoload.php';
 //include_once '../src/Course.php';
-use CrowdmarkDashboard\Course;
+use Waterloobae\CrowdmarkDashboard\Course;
 
 echo("Start Time1:" . date("Y-m-d H:i:s") . "<br>");
 $course1 = new Course('euclid-d-2024');
@@ -27,7 +27,7 @@ echo("</pre>");
 
 
 // include_once '../src/Crowdmark.php';
-// use CrowdmarkDashboard\Crowdmark;
+// use Waterloobae\CrowdmarkDashboard\Crowdmark;
 
 // $crowdmark = new Crowdmark('courses');
 // echo("<pre>");
@@ -36,7 +36,7 @@ echo("</pre>");
 
 
 // include_once '../src/API.php';
-// use CrowdmarkDashboard\API;
+// use Waterloobae\CrowdmarkDashboard\API;
 
 // $api = new API('courses');
 // echo("<pre>");

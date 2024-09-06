@@ -3,8 +3,8 @@
 namespace Waterloobae\CrowdmarkDashboard;
 // include_once '../src/API.php';
 // include_once '../src/Response.php';
-use CrowdmarkDashboard\API;
-use CrowdmarkDashboard\Response;
+use Waterloobae\CrowdmarkDashboard\API;
+use Waterloobae\CrowdmarkDashboard\Response;
 
 class Booklet{
     protected string $booklet_id;

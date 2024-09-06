@@ -2,7 +2,7 @@
 
 namespace Waterloobae\CrowdmarkDashboard;
 //include_once '../src/API.php';
-use CrowdmarkDashboard\API;
+use Waterloobae\CrowdmarkDashboard\API;
 
 class Response{
     public string $response_id;

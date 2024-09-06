@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 //include_once '../src/API.php';
-use CrowdmarkDashboard\API;
+use Waterloobae\CrowdmarkDashboard\API;
 
 class Dashboard{
     public function getData($name) {

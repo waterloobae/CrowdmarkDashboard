@@ -1,11 +1,10 @@
 <?php
 
 namespace Waterloobae\CrowdmarkDashboard;
-// include_once '../src/API.php';
-// include_once '../src/Question.php';
-use CrowdmarkDashboard\API;
-use CrowdmarkDashboard\Booklet;
-use CrowdmarkDashboard\Question;
+use Waterloobae\CrowdmarkDashboard\API;
+use Waterloobae\CrowdmarkDashboard\Booklet;
+use Waterloobae\CrowdmarkDashboard\Question;
+use Exception;
 
 class Assessment{
     protected string $assessment_id;
@@ -42,23 +41,16 @@ class Assessment{
 
         $this->setQuestions($assessment_id);
         $this->setBooklets($assessment_id);
-        $this->setTotalCounts();
-        $this->setGradedCountsFromBooklets();
-        //$this->setGradedCountsFromQuestions();
+        $this->setUploadedAndMatchedCounts();
+        $this->setGradedCounts();
     }
 
-    public function setTotalCounts()
+    public function setUploadedAndMatchedCounts()
     {
         foreach($this->booklets as $booklet) {
 
             if ($booklet->getResponsesCount() > 0) {
                 $this->uploaded_count += 1;
-            
-                // if ($response->status == "graded") {
-                //         foreach($booklet->getResponses() as $response) {
-                //         $this->graded_counts[$response->question_label] += 1;
-                //     }
-                // }
             }
 
             if ($booklet->getEnrollmentId() !== "NA") {
@@ -77,35 +69,7 @@ class Assessment{
          }
     }
 
-    // public function setGradedCountsFromQuestions()
-    // {
-    //     // This will be faster than setGradedCountsFromBooklets, but
-    //     // 504 Gateway Time-out error will occur since there are too many booklets
-    //     foreach($this->questions as $question){
-    //         $end_points[] = 'api/questions/' . $question->getQuestionId() . '/responses';
-    //     }
-
-    //     $api = new API();
-    //     $api->multiExec($end_points);
-    //     $responses = $api->getResponses();
-
-    //     foreach($responses as $response){
-
-    //          foreach ($response->data as $data) {
-    //             if ($data->type == "response" && $data->attributes->status == "graded"){
-
-    //                 $temp = $data->relationships->question->links->self;
-    //                 $items = explode("/", $temp);
-    //                 $question_label = end($items);
-
-    //                 $this->graded_counts[$question_label] += 1;
-    //             }
-    //         }
-    //     }   
-    // }
-
-
-    public function setGradedCountsFromQuestions()
+    public function setGradedCounts()
     {
         // This will be faster than setGradedCountsFromBooklets, but
         // 504 Gateway Time-out error will occur since there are too many booklets
@@ -113,21 +77,30 @@ class Assessment{
             $end_point = 'api/questions/' . $question->getQuestionId() . '/responses';
 
             $api = new API();
-            $api->exec($end_point);
-            $response = $api->getResponse();
 
-            foreach ($response->data as $data) {
-                if ($data->type == "response" && $data->attributes->status == "graded"){
-                    $temp = $data->relationships->question->links->self;
-                    $items = explode("/", $temp);
-                    $question_label = end($items);
-                    $this->graded_counts[$question_label] += 1;
+            try {
+                $api->exec($end_point);
+                $response = $api->getResponse();
+
+                foreach ($response->data as $data) {
+                    if ($data->type == "response" && $data->attributes->status == "graded"){
+                        $temp = $data->relationships->question->links->self;
+                        $items = explode("/", $temp);
+                        $question_label = end($items);
+                        $this->graded_counts[$question_label] += 1;
+                    }
                 }
             }
+            catch (Exception $e) {
+                error_log('Caught exception: '.$e->getMessage());
+                $this->setGradedCountsFromBooklets();
+                // This will break the loop 
+                // to stop going through the rest of the questions
+                break;
+            }
+
         }
     }
-
-
 
     public function setGradedCountsFromBooklets()
     {

@@ -3,8 +3,8 @@
 namespace Waterloobae\CrowdmarkDashboard;
 // include_once '../src/API.php';
 // include_once '../src/Assessment.php';
-use CrowdmarkDashboard\API;
-use CrowdmarkDashboard\Assessment;
+use Waterloobae\CrowdmarkDashboard\API;
+use Waterloobae\CrowdmarkDashboard\Assessment;
 
 class Course{
     protected string $course_id;
