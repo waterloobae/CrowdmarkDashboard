@@ -75,20 +75,6 @@ class API
             throw new Exception("API call returned non JSON response or Errors were returned from Crowdmark.");
         }
 
-        // try {
-        //     if( json_decode($response) !== null && 
-        //         !array_key_exists('errors',json_decode($response, true)) &&
-        //         $this->httpCode == 200){
-        //         $this->api_response = json_decode($response);
-        //     }else{
-        //         throw new Exception("API call returned non JSON response or Errors were returned from Crowdmark.");
-        //     }
-        // }
-        // catch(Exception $msg){
-        //         //$this->consoleLog("Exception: ". $msg);
-        //         //die("Exception: ". $msg);
-        //         //$this->api_response = [];
-        // }
     }
 
     public function multiExec(array $big_end_points){

@@ -149,10 +149,28 @@ $html = <<<HTML
         @import url('../src/css/dashboard.css');
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../src/js/ajax.js"></script>
 
 </head>
 <body>
-
+<form id="myForm">
+    <input type="text" id="name" name="name" value="John Doe">
+    <input type="hidden" id="csrf_token" name="csrf_token" value="ABC123">
+    <p id="response"></p>
+    <button>Get Data from Server</button>
+    <script>
+        // Fetch CSRF token on page load
+        fetch('../src/AjaxHandler.php?csrf=true')
+          .then(response => response.json())
+          .then(data => {
+              document.getElementById('csrf_token').value = data.csrf_token;
+          });
+        document.getElementById('myForm').addEventListener('submit', function (event) {
+          sendAjaxRequest(event, 'sayHello', 'myForm');
+    });
+    </script>
+</form>
+<hr>
 <div class="canvas-container">
   <!--
     -->
