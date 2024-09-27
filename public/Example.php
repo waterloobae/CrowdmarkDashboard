@@ -155,6 +155,10 @@ $html = <<<HTML
 <body>
 <form id="myForm">
     <input type="text" id="name" name="name" value="John Doe">
+    <md-filter-chip label="2024 Euclid A" onclick="toggleChipStatus(this)" \>
+    </md-filter-chip>
+    <md-filter-chip label="2024 Euclid C" onclick="toggleChipStatus(this)" \>
+    </md-filter-chip>    
     <input type="hidden" id="csrf_token" name="csrf_token" value="ABC123">
     <p id="response"></p>
     <button>Get Data from Server</button>
@@ -167,7 +171,19 @@ $html = <<<HTML
           });
         document.getElementById('myForm').addEventListener('submit', function (event) {
           sendAjaxRequest(event, 'sayHello', 'myForm');
-    });
+        });
+
+        function toggleChipStatus(chip) {
+            // Find the parent chip element
+            // const chip = button.parentElement;
+            alert(chip.selected);
+            // Toggle the 'data-selected' attribute
+            // const isSelected = chip.getAttribute("data-selected") === "true";
+            // chip.setAttribute("data-selected", !isSelected);
+    
+            // Optionally, change the button text to reflect the current state
+            // button.textContent = isSelected ? "Select" : "Unselect";
+        }
     </script>
 </form>
 <hr>

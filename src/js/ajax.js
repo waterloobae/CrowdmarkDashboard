@@ -12,13 +12,11 @@ function sendAjaxRequest(event, action, formId) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
-            alert(response.status);
             if (response.status === 'success') {
                 //document.getElementById('response').innerText = response.data;
                 document.getElementById('response').innerText = response;                
             } else {
                 //document.getElementById('response').innerText = response.message;
-                alert(response.message);
                 document.getElementById('response').innerText = response;
             }
         }
@@ -37,7 +35,7 @@ function sendAjaxRequest(event, action, formId) {
  
      // Convert FormData to URL-encoded string for the POST request
      const params = new URLSearchParams(formData).toString();
-     // alert(params);
+     alert(params);
     xhr.send(params);
 }
 
