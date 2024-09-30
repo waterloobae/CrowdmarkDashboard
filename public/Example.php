@@ -155,9 +155,9 @@ $html = <<<HTML
 <body>
 <form id="myForm">
     <input type="text" id="name" name="name" value="John Doe">
-    <md-filter-chip label="2024 Euclid A" onclick="toggleChipStatus(this)" \>
+    <md-filter-chip label="2024 Euclid A" \>
     </md-filter-chip>
-    <md-filter-chip label="2024 Euclid C" onclick="toggleChipStatus(this)" \>
+    <md-filter-chip label="2024 Euclid C" \>
     </md-filter-chip>    
     <input type="hidden" id="csrf_token" name="csrf_token" value="ABC123">
     <p id="response"></p>
@@ -170,20 +170,44 @@ $html = <<<HTML
               document.getElementById('csrf_token').value = data.csrf_token;
           });
         document.getElementById('myForm').addEventListener('submit', function (event) {
+          createHiddenControl();
           sendAjaxRequest(event, 'sayHello', 'myForm');
+          deleteHiddenControl()
         });
 
-        function toggleChipStatus(chip) {
-            // Find the parent chip element
-            // const chip = button.parentElement;
-            alert(chip.selected);
-            // Toggle the 'data-selected' attribute
-            // const isSelected = chip.getAttribute("data-selected") === "true";
-            // chip.setAttribute("data-selected", !isSelected);
-    
-            // Optionally, change the button text to reflect the current state
-            // button.textContent = isSelected ? "Select" : "Unselect";
+        function createHiddenControl() {
+          const form = document.getElementById("myForm");
+          const chips = document.querySelectorAll("md-filter-chip");
+          const selectedChips = [];
+
+          chips.forEach(chip => {
+              const chipValue = chip.getAttribute("label");
+              //alert(chip.selected);              
+              //alert(chip.getAttribute("selected"));
+              const isSelected = chip.selected;
+          
+              if (isSelected) {
+                  // Add selected chip to the array
+                  selectedChips.push(chipValue);
+              }
+          }); // Added missing parenthesis
+        
+          const hiddenControl = document.createElement('input');
+          hiddenControl.type = 'hidden';
+          hiddenControl.name = 'selectedChips';
+          hiddenControl.value = JSON.stringify(selectedChips);  // Post as JSON array
+          alert(hiddenControl.value);
+          form.appendChild(hiddenControl);
         }
+        
+        function deleteHiddenControl() {
+          const form = document.getElementById("myForm");
+          const hiddenControl = form.querySelector('input[name="selectedChips"]');
+          if (hiddenControl) {
+              form.removeChild(hiddenControl);
+          }
+        }
+    
     </script>
 </form>
 <hr>
