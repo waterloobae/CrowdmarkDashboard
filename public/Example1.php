@@ -3,6 +3,13 @@ namespace Waterloobae\CrowdmarkDashboard;
 require_once __DIR__ . '/../vendor/autoload.php';
 //include_once '../src/Course.php';
 use Waterloobae\CrowdmarkDashboard\Course;
+use Waterloobae\CrowdmarkDashboard\Crowdmark;
+
+//$crowdmark = new Crowdmark('courses');
+$crowdmark = new Crowdmark();
+echo("<pre>");
+var_dump($crowdmark->getCourseIds());
+echo("</pre>");
 
 echo("Start Time1:" . date("Y-m-d H:i:s") . "<br>");
 // $course1 = new Course('euclid-d-2024');
