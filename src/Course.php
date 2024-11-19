@@ -13,6 +13,7 @@ class Course{
     protected string $end_point;
     protected object $response;
     protected array $assessments = [];
+    protected array $assessment_ids = [];    
 
     public function __construct($course_id)
     {
@@ -28,24 +29,39 @@ class Course{
         $temp = "created-at";
         $this->created_at = $this->response->data->attributes->$temp;
 
-        $this->setAssessment($course_id);
+        //$this->setAssessment($course_id);
+        $this->setAssessmentIds($course_id);
 
     }
 
     public function setAssessment($course_id)
     {
-         $api = new API();
-         $api->exec('api/courses/' . $course_id . '/assessments');
-         $response = $api->getResponse();
-         foreach ($response->data as $assessment) {
-             $this->assessments[] = new Assessment($assessment->id);
-         }
+        $api = new API();
+        $api->exec('api/courses/' . $course_id . '/assessments');
+        $response = $api->getResponse();
+        foreach ($response->data as $assessment) {
+            $this->assessments[] = new Assessment($assessment->id);
+        }
      }
+
+    public function setAssessmentIds($course_id)
+    {
+        $api = new API();
+        $api->exec('api/courses/' . $course_id . '/assessments');
+        $response = $api->getResponse();
+        foreach ($response->data as $assessment) {
+            $this->assessment_ids[] = $assessment->id;
+        }
+    }
 
      public function getAssessments()
      {
-         return $this->assessments;
+        return $this->assessments;
      }
 
+     public function getAssessmentIds()
+     {
+        return $this->assessment_ids;
+     }
 
 }

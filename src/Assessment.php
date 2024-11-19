@@ -31,7 +31,6 @@ class Assessment{
         $api->exec($this->end_point);
         $this->response = $api->getResponse();
 
-
         $this->assessment_name = $this->response->data->attributes->title;
         $this->booklet_count = $this->response->data->relationships->booklets->meta->count;
 
@@ -42,7 +41,7 @@ class Assessment{
         $this->setQuestions($assessment_id);
         $this->setBooklets($assessment_id);
         $this->setUploadedAndMatchedCounts();
-        $this->setGradedCounts();
+        //$this->setGradedCounts();
     }
 
     public function setUploadedAndMatchedCounts()
@@ -169,6 +168,11 @@ class Assessment{
     public function getQuestions()
     {
          return $this->questions;
+    }
+
+    public function getAssessmentName()
+    {
+        return $this->assessment_name;
     }
 
     public function getBooklets()

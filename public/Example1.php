@@ -6,12 +6,40 @@ use Waterloobae\CrowdmarkDashboard\Course;
 use Waterloobae\CrowdmarkDashboard\Crowdmark;
 
 //$crowdmark = new Crowdmark('courses');
+$assessment_ids = [];
+$assessments = [];
 $crowdmark = new Crowdmark();
-echo("<pre>");
-var_dump($crowdmark->getCourseIds());
-echo("</pre>");
 
-echo("Start Time1:" . date("Y-m-d H:i:s") . "<br>");
+echo("Start Time:" . date("Y-m-d H:i:s") . "<br>");
+
+foreach($crowdmark->getCourseIds() as $course_id) {
+    $course = new Course($course_id);
+    $assessment_ids = array_merge($assessment_ids, $course->getAssessmentIds());
+}
+
+foreach($assessment_ids as $assessment_id) {
+    $assessments[] = new Assessment($assessment_id);
+}   
+
+echo("<table>");
+echo("<tr> <td>Assessment Name</td>,<td>Uploaded</td>,<td>Matched</td></tr>");
+foreach($assessments as $assessment) {
+    echo("<tr>");
+    echo("<td>".$assessment->getAssessmentName() . "</td>");
+    echo("<td>".$assessment->getUploadedCount() . "</td>");
+    echo("<td>".$assessment->getMatchedCount()."</td>");
+    // echo("<pre>");
+    // var_dump($assessment->getGradedCounts());
+    // echo("</pre>");
+    echo("</tr>");
+}
+echo("</table>");
+echo("End Time:" . date("Y-m-d H:i:s") . "<br>");
+
+// echo("<pre>");
+// var_dump($crowdmark->getCourseIds());
+// echo("</pre>");
+
 // $course1 = new Course('euclid-d-2024');
 // //$course2 = new Course('euclid-flex-2024-9a7cc');
 
@@ -25,7 +53,6 @@ echo("Start Time1:" . date("Y-m-d H:i:s") . "<br>");
 //     echo("</pre>");
 // }
 
-echo("End Time:" . date("Y-m-d H:i:s") . "<br>");
 
 echo("<pre>");
 //var_dump($course1->getAssessments());   
