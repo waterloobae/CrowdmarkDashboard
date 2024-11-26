@@ -54,14 +54,18 @@ class Course{
         }
     }
 
-     public function getAssessments()
-     {
-        return $this->assessments;
-     }
+    public function getAssessments()
+    {
+       return $this->assessments;
+    }
+    
+    public function getAssessmentIds()
+    {
+       return $this->assessment_ids;
+    }
 
-     public function getAssessmentIds()
-     {
-        return $this->assessment_ids;
-     }
-
+    public function getCourseName()
+    {
+        return $this->course_name;
+    }
 }
