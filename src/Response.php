@@ -9,7 +9,7 @@ class Response{
     public string $question_id;
     public string $question_label;
     public string $score_id;
-    public string $status;
+    public string $is_graded_status;
     public array $pages;
     public string $booklet_id;
 
@@ -21,7 +21,7 @@ class Response{
         $items = explode("/", $temp);
         $this->question_label = end($items);
         $this->score_id = $response->relationships->scores->data->id ?? "NA";
-        $this->status = $response->attributes->status;
+        $this->is_graded_status = $response->attributes->status;
         $this->pages = $response->relationships->pages->data ?? [];
         $this->booklet_id = $response->relationships->booklet->data->id;
     }

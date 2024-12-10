@@ -30,8 +30,9 @@ $totalUploaded = 0;
 $totalMatched = 0;
 
 echo("<table>");
-echo("<tr> <td>Assessment Name</td>,<td>Uploaded</td>,<td>Matched</td></tr>");
+echo("<tr> <td>Assessment ID</td>,<td>Uploaded</td>,<td>Matched</td></tr>");
 foreach($assessments as $assessment) {
+    $assessment->setUploadedAndMatchedCounts();
     $totalUploaded += $assessment->getUploadedCount();
     $totalMatched += $assessment->getMatchedCount();
     echo("<tr>");
@@ -50,44 +51,3 @@ echo("<td>".$totalMatched."</td>");
 echo("</tr>");
 echo("</table>");
 echo("End Time:" . date("Y-m-d H:i:s") . "<br>");
-
-// echo("<pre>");
-// var_dump($crowdmark->getCourseIds());
-// echo("</pre>");
-
-// $course1 = new Course('euclid-d-2024');
-// //$course2 = new Course('euclid-flex-2024-9a7cc');
-
-// echo("Start Time2:" . date("Y-m-d H:i:s") . "<br>");
-
-// foreach($course1->getAssessments() as $assessment) {
-//     echo("Uploaded :". $assessment->getUploadedCount() . "<br>");
-//     echo("Matched :". $assessment->getMatchedCount() . "<br>");
-//     echo("<pre>");
-//     var_dump($assessment->getGradedCounts());
-//     echo("</pre>");
-// }
-
-
-echo("<pre>");
-//var_dump($course1->getAssessments());   
-//var_dump($course2->getAssessments());
-echo("</pre>");
-
-
-// include_once '../src/Crowdmark.php';
-// use Waterloobae\CrowdmarkDashboard\Crowdmark;
-
-// $crowdmark = new Crowdmark('courses');
-// echo("<pre>");
-// var_dump($crowdmark->getCourses());
-// echo("</pre>");
-
-
-// include_once '../src/API.php';
-// use Waterloobae\CrowdmarkDashboard\API;
-
-// $api = new API('courses');
-// echo("<pre>");
-// var_dump($api->getResponse());
-// echo("</pre>");

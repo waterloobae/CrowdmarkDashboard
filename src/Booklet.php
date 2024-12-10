@@ -25,7 +25,6 @@ class Booklet{
         $this->responses_link = $booklet->relationships->responses->links->related ?? "NA";
         $this->responses_count = $booklet->relationships->responses->meta->count;
         $this->booklet_link = $booklet->links->self;
-
     }
     
     public function setResponsesByAPI()
@@ -61,5 +60,10 @@ class Booklet{
     public function getBookletId()
     {
         return $this->booklet_id;
+    }
+
+    public function getBookletNumber()
+    {
+        return $this->booklet_number;
     }
 }

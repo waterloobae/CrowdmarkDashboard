@@ -3,6 +3,8 @@ namespace Waterloobae\CrowdmarkDashboard;
 require_once __DIR__ . '/../vendor/autoload.php';
 //include_once '../src/Course.php';
 use Waterloobae\CrowdmarkDashboard\Course;
+use Waterloobae\CrowdmarkDashboard\Assessment;
+use Waterloobae\CrowdmarkDashboard\Booklet;
 use Waterloobae\CrowdmarkDashboard\Crowdmark;
 
 //$crowdmark = new Crowdmark('courses');
@@ -15,22 +17,33 @@ echo("Start Time:" . date("Y-m-d H:i:s") . "<br>");
 foreach($crowdmark->getCourseIds() as $course_id) {
 
     $course = new Course($course_id);
-    if (strpos($course->getCourseName(), '2024') !== false && 
-        (strpos($course->getCourseName(), 'CSMC') !== false || strpos($course->getCourseName(), 'CIMC') !== false)) {
+    if ($course->getCourseName() == "CSMC 2024 F" || $course->getCourseName() == "CSMC 2024 G") {
         $assessment_ids = array_merge($assessment_ids, $course->getAssessmentIds());
     }
-    //$assessment_ids = array_merge($assessment_ids, $course->getAssessmentIds());
 }
 
 foreach($assessment_ids as $assessment_id) {
     $assessments[] = new Assessment($assessment_id);
 }   
 
+echo("<table>");
+echo("<tr> <td>Assessment ID</td><td>Booklet Number</td><td>Booklet Id</td><td>Responses Count</td></tr>");
 foreach($assessments as $assessment) {
-
-    echo($assessment->getAssessmentID() . "<br>");
+    foreach($assessment->getBooklets() as $booklet) {
+        //if($booklet->getResponsesCount() != "9" && $booklet->getEnrollmentId() != "NA") {        
+        if($booklet->getResponsesCount() > 0 && $booklet->getEnrollmentId() == "NA") {                    
+            echo("<tr>");
+            echo("<td>".$assessment->getAssessmentID() . "</td>");
+            echo("<td>".$booklet->getBookletNumber() . "</td>");
+            echo("<td>".$booklet->getBookletId()."</td>");
+            echo("<td>".$booklet->getResponsesCount()."</td>");
+    echo("</tr>");
+        }
+    }
 }
+echo("</table>");
 echo("End Time:" . date("Y-m-d H:i:s") . "<br>");
+
 
 // echo("<pre>");
 // var_dump($crowdmark->getCourseIds());

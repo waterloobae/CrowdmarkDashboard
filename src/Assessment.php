@@ -14,6 +14,7 @@ class Assessment{
     protected string $end_point;
     protected array $questions = [];
     protected array $booklets = [];
+    protected array $matched_email_list = [];
 
     // Total counts
     protected int $uploaded_count = 0;
@@ -40,7 +41,7 @@ class Assessment{
 
         $this->setQuestions($assessment_id);
         $this->setBooklets($assessment_id);
-        $this->setUploadedAndMatchedCounts();
+        //$this->setUploadedAndMatchedCounts();
         //$this->setGradedCounts();
     }
 
@@ -165,6 +166,44 @@ class Assessment{
         } while ( $self_link != "end");
     }
 
+    public function setMatchedEmailList()
+    {
+        foreach($this->booklets as $booklet) {
+            if ($booklet->getEnrollmentId() !== "NA") {
+                $this->matched_email_list[] = $booklet->getEnrollmentId();
+            }
+        }
+        foreach($this->booklets as $booklet){
+            $end_points[] = 'api/booklets/' . $booklet->getBookletId() . '/responses';
+        }
+
+        // $api = new API();
+        // $api->multiExec($end_points);
+        // $responses = $api->getResponses();
+
+        // foreach($responses as $response){
+        //     // echo "==== Response Debug ====<br>";
+        //     // echo("<pre>");
+        //     // var_dump($response->data);
+        //     // echo("</pre>");
+
+        //      foreach ($response as $data) {
+        //         if ($data->type == "response" && $data->attributes->status == "graded"){
+        //             $temp = $data->relationships->question->links->self;
+        //             $items = explode("/", $temp);
+        //             $question_label = end($items);
+        //             $this->graded_counts[$sequence[$question_label]] += 1;
+        //         }
+        //     }
+        // }
+        
+        // // Sorting by sequence number
+        // ksort($this->graded_counts, 1);
+        
+
+    }
+
+
     public function getQuestions()
     {
          return $this->questions;
@@ -173,6 +212,11 @@ class Assessment{
     public function getAssessmentName()
     {
         return $this->assessment_name;
+    }
+
+    public function getAssessmentID()
+    {
+        return $this->assessment_id;
     }
 
     public function getBooklets()
