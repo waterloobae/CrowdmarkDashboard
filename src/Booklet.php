@@ -7,6 +7,7 @@ use Waterloobae\CrowdmarkDashboard\API;
 use Waterloobae\CrowdmarkDashboard\Response;
 
 class Booklet{
+    protected string $assessment_id;
     protected string $booklet_id;
     protected string $enrollment_id;
     protected string $booklet_number;
@@ -15,10 +16,11 @@ class Booklet{
     protected string $booklet_link;
     protected array $responses = [];
 
-    public function __construct(object $booklet)
+    public function __construct(string $assessment_id, object $booklet)
     {
         //var_dump($booklet);
         //die();
+        $this->assessment_id = $assessment_id;
         $this->booklet_id = $booklet->id;
         $this->enrollment_id = $booklet->relationships->enrollment->data->id ?? "NA";
         $this->booklet_number = $booklet->attributes->number;

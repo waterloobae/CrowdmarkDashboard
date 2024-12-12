@@ -6,6 +6,7 @@ use Waterloobae\CrowdmarkDashboard\API;
 
 class Question{
     protected string $question_id;
+    protected string $max_points;
     protected string $question_name;
     protected string $question_sequence_number;
     protected string $created_at;
@@ -17,10 +18,11 @@ class Question{
         $this->question_id = $question->id;
         $this->end_point = 'questions/' . $question->id;
         $this->question_name = $question->attributes->label;
+        $temp = "max-points"; // "-" does not work in PHP Standard Ojbect variable names
+        $this->max_points = $question->attributes->$temp;
         $this->question_sequence_number = $question->attributes->sequence;
-        $this->response_count = $question->relationships->responses->meta->count;
-        // "-" does not work in PHP Standard Ojbect variable names
-        $temp = "created-at";
+        $this->response_count = $question->relationships->responses->meta->count;        
+        $temp = "created-at"; // "-" does not work in PHP Standard Ojbect variable names
         $this->created_at = $question->attributes->$temp;
     }
 

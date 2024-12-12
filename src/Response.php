@@ -3,23 +3,31 @@
 namespace Waterloobae\CrowdmarkDashboard;
 //include_once '../src/API.php';
 use Waterloobae\CrowdmarkDashboard\API;
+use Waterloobae\CrowdmarkDashboard\Question;
+use Waterloobae\CrowdmarkDashboard\Grader;
+use Waterloobae\CrowdmarkDashboard\Page;
 
 class Response{
-    public string $response_id;
-    public string $question_id;
-    public string $question_label;
-    public string $score_id;
-    public string $is_graded_status;
-    public array $pages;
-    public string $booklet_id;
+    protected string $assessment_id;
+    protected string $booklet_id;
+    protected string $response_id;
+
+    protected string $score_id;
+    protected string $is_graded_status;
+    protected float $score;
+
+    protected object $question;
+    protected object $grader;
+
+    protected array $pages = [];
 
     public function __construct(object $response)
     {
         $this->response_id = $response->id;
-        $this->question_id = $response->relationships->question->data->id;
         $temp = $response->relationships->question->links->self;
         $items = explode("/", $temp);
-        $this->question_label = end($items);
+        // $this->question_id = $response->relationships->question->data->id;
+        // $this->question_label = end($items);
         $this->score_id = $response->relationships->scores->data->id ?? "NA";
         $this->is_graded_status = $response->attributes->status;
         $this->pages = $response->relationships->pages->data ?? [];

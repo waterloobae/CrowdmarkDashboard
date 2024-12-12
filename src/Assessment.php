@@ -160,7 +160,7 @@ class Assessment{
             // echo("</pre>");
 
             foreach ($response->data as $booklet) {
-                $this->booklets[] = new Booklet($booklet);
+                $this->booklets[] = new Booklet($this->assessment_id, $booklet);
             }
             $self_link = $response->links->next ?? "end";
         } while ( $self_link != "end");
