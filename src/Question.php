@@ -1,10 +1,9 @@
 <?php
 
 namespace Waterloobae\CrowdmarkDashboard;
-//include_once '../src/API.php';
-use Waterloobae\CrowdmarkDashboard\API;
 
 class Question{
+    protected string $assessment_id;    
     protected string $question_id;
     protected string $max_points;
     protected string $question_name;
@@ -13,8 +12,9 @@ class Question{
     protected string $end_point;
     protected string $response_count;
 
-    public function __construct(object $question)
+    public function __construct(string $assessment_id, object $question)
     {
+        $this->assessment_id = $assessment_id;
         $this->question_id = $question->id;
         $this->end_point = 'questions/' . $question->id;
         $this->question_name = $question->attributes->label;

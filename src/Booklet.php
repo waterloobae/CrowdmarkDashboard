@@ -35,7 +35,7 @@ class Booklet{
         $api->exec($this->responses_link);
         $response = $api->getResponse();
         foreach ($response->data as $response) {
-            $this->responses[] = new Response($response);
+            $this->responses[] = new Response($this->assessment_id, $response);
         }
     }
 

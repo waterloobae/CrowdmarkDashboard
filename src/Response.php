@@ -16,13 +16,14 @@ class Response{
     protected string $is_graded_status;
     protected float $score;
 
-    protected object $question;
-    protected object $grader;
+    protected string $question_id;
+    protected string $grader_id;
 
     protected array $pages = [];
 
-    public function __construct(object $response)
+    public function __construct(string $assessment_id, object $response)
     {
+        $this->assessment_id = $assessment_id;
         $this->response_id = $response->id;
         $temp = $response->relationships->question->links->self;
         $items = explode("/", $temp);

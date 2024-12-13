@@ -65,7 +65,7 @@ class Assessment{
          $api->exec('api/assessments/' . $assessment_id . '/questions');
          $response = $api->getResponse();
          foreach ($response->data as $question) {
-             $this->questions[] = new Question($question);
+             $this->questions[] = new Question($assessment_id, $question);
          }
     }
 

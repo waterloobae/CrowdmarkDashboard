@@ -57,7 +57,7 @@ flowchart TD
     n3 --> n4["Assessment"]
     n4 --> n5["Booklet"] & n9["Question"]
     n5 --> n6["Response"]
-    n6 --> n7["Page"] & n8["Grader"]
+    n6 --> n7["Page"]
+    n4 --> n8["Grader"]
     n9 -- Times out for Big Assessment --> n6
-    n6 --> n10["Question"]
     
