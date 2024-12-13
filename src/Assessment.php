@@ -4,6 +4,9 @@ namespace Waterloobae\CrowdmarkDashboard;
 use Waterloobae\CrowdmarkDashboard\API;
 use Waterloobae\CrowdmarkDashboard\Booklet;
 use Waterloobae\CrowdmarkDashboard\Question;
+use Waterloobae\CrowdmarkDashboard\Response;
+use Waterloobae\CrowdmarkDashboard\Grader;
+
 use Exception;
 
 class Assessment{
@@ -12,8 +15,10 @@ class Assessment{
     protected string $created_at;
     protected int $booklet_count;
     protected string $end_point;
+
     protected array $questions = [];
     protected array $booklets = [];
+    protected array $graders = [];
     protected array $matched_email_list = [];
 
     // Total counts
@@ -41,23 +46,12 @@ class Assessment{
 
         $this->setQuestions($assessment_id);
         $this->setBooklets($assessment_id);
+        $this->setResponses($this->booklets); //This sets Graders and Pages
         //$this->setUploadedAndMatchedCounts();
         //$this->setGradedCounts();
     }
 
-    public function setUploadedAndMatchedCounts()
-    {
-        foreach($this->booklets as $booklet) {
 
-            if ($booklet->getResponsesCount() > 0) {
-                $this->uploaded_count += 1;
-            }
-
-            if ($booklet->getEnrollmentId() !== "NA") {
-                $this->matched_count += 1;
-            }
-        }
-    }
 
     public function setQuestions($assessment_id)
     {
@@ -67,6 +61,55 @@ class Assessment{
          foreach ($response->data as $question) {
              $this->questions[] = new Question($assessment_id, $question);
          }
+    }
+
+    public function setBooklets($assessment_id)
+    {
+        $self_link = 'api/assessments/' . $assessment_id . '/booklets';
+
+        do {
+            $api = new API();
+            $api->exec($self_link);
+            $response = $api->getResponse();
+            // echo "==== Booklet Debug ====<br>";
+            // echo("<pre>");
+            // var_dump($response->data);
+            // echo("</pre>");
+
+            foreach ($response->data as $booklet) {
+                $this->booklets[] = new Booklet($this->assessment_id, $booklet);
+            }
+            $self_link = $response->links->next ?? "end";
+        } while ( $self_link != "end");
+    }
+
+    //This sets Graders and Pages
+    public function setResponses($booklets)
+    {
+        foreach($booklets as $booklet){
+            $end_points[] = 'api/booklets/' . $booklet->getBookletId() . '/responses';
+        }
+
+        $api = new API();
+        $api->multiExec($end_points);
+        $api_responses = $api->getResponses();
+
+        foreach($api_responses as $api_response){
+            // echo "==== Response Debug ====<br>";
+            // echo("<pre>");
+            // var_dump($api_response->data);
+            // echo("</pre>");
+
+            foreach ($api_response->data as $data) {
+                $booklet->responses[] = new Response($this->assessment_id, $data, $api_response->included);
+            }
+
+            foreach ($api_response->included as $data) {
+                if ($data->type == "user"){ 
+                    $this->graders[] = new Grader($data);
+                }
+            }
+        }
     }
 
     public function setGradedCounts()
@@ -102,6 +145,21 @@ class Assessment{
         }
     }
 
+    public function setUploadedAndMatchedCounts()
+    {
+        foreach($this->booklets as $booklet) {
+
+            if ($booklet->getResponsesCount() > 0) {
+                $this->uploaded_count += 1;
+            }
+
+            if ($booklet->getEnrollmentId() !== "NA") {
+                $this->matched_count += 1;
+            }
+        }
+    }
+
+    // This must be rewritten to used after running getResponses() 
     public function setGradedCountsFromBooklets()
     {
 
@@ -146,26 +204,8 @@ class Assessment{
 
     }
 
-    public function setBooklets($assessment_id)
-    {
-        $self_link = 'api/assessments/' . $assessment_id . '/booklets';
 
-        do {
-            $api = new API();
-            $api->exec($self_link);
-            $response = $api->getResponse();
-            // echo "==== Booklet Debug ====<br>";
-            // echo("<pre>");
-            // var_dump($response->data);
-            // echo("</pre>");
-
-            foreach ($response->data as $booklet) {
-                $this->booklets[] = new Booklet($this->assessment_id, $booklet);
-            }
-            $self_link = $response->links->next ?? "end";
-        } while ( $self_link != "end");
-    }
-
+    // This will be used for attendency check
     public function setMatchedEmailList()
     {
         foreach($this->booklets as $booklet) {
@@ -200,7 +240,6 @@ class Assessment{
         // // Sorting by sequence number
         // ksort($this->graded_counts, 1);
         
-
     }
 
 

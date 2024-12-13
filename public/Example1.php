@@ -5,6 +5,12 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Waterloobae\CrowdmarkDashboard\Course;
 use Waterloobae\CrowdmarkDashboard\Crowdmark;
 
+// ==============================
+// This script lists uploaded and matched counts 
+// for all assessments in selected courses
+// ==============================
+
+
 //$crowdmark = new Crowdmark('courses');
 $assessment_ids = [];
 $assessments = [];

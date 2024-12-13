@@ -9,18 +9,24 @@ class Grader{
  
     public function __construct(object $grader)
     {
-        // $this->question_id = $question->id;
-        // $this->end_point = 'questions/' . $question->id;
-        // $this->question_name = $question->attributes->label;
-        // $temp = "max-points"; // "-" does not work in PHP Standard Ojbect variable names
-        // $this->max_points = $question->attributes->$temp;
-
+        $this->user_id = $grader->id;
+        $this->name = $grader->attributes->name ?? "NA";
+        $this->email = $grader->attributes->email;
     }
 
-    // public function getQuestionId()
-    // {
-    //     return $this->question_id;
-    // }
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
  
 }

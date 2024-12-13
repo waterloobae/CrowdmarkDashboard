@@ -12,6 +12,10 @@ $assessment_ids = [];
 $assessments = [];
 $crowdmark = new Crowdmark();
 
+// ==============================
+// This script list Booklets whose response Count is off
+// ==============================
+
 echo("Start Time:" . date("Y-m-d H:i:s") . "<br>");
 
 foreach($crowdmark->getCourseIds() as $course_id) {
