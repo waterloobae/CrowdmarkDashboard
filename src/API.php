@@ -78,7 +78,7 @@ class API
     }
 
     public function multiExec(array $big_end_points){
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '4096M');
         $batch_size = 10;
         $interval = 0;
 
@@ -120,7 +120,8 @@ class API
                 // Get the response content
                 $response = curl_multi_getcontent($ch);
                 if(json_decode($response) !== null){
-                    $data = json_decode($response)->data;;
+                    // $data = json_decode($response)->data;
+                    $data = json_decode($response);                    
                     $this->api_responses[ $i * $batch_size + $j] = $data;
                     // echo"Response: " . $i * $batch_size + $j . "<br>";
                 }

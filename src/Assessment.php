@@ -46,7 +46,7 @@ class Assessment{
 
         $this->setQuestions($assessment_id);
         $this->setBooklets($assessment_id);
-        $this->setResponses($this->booklets); //This sets Graders and Pages
+        //$this->setResponses($this->booklets); //This sets Graders and Pages
         //$this->setUploadedAndMatchedCounts();
         //$this->setGradedCounts();
     }
@@ -86,6 +86,7 @@ class Assessment{
     //This sets Graders and Pages
     public function setResponses($booklets)
     {
+        $dup_grader_ids = [];
         foreach($booklets as $booklet){
             $end_points[] = 'api/booklets/' . $booklet->getBookletId() . '/responses';
         }
@@ -94,21 +95,31 @@ class Assessment{
         $api->multiExec($end_points);
         $api_responses = $api->getResponses();
 
+        $temp_responses = [];
         foreach($api_responses as $api_response){
             // echo "==== Response Debug ====<br>";
             // echo("<pre>");
-            // var_dump($api_response->data);
+            // var_dump($api_response->included);
             // echo("</pre>");
 
             foreach ($api_response->data as $data) {
-                $booklet->responses[] = new Response($this->assessment_id, $data, $api_response->included);
+                $temp_responses[] = new Response($this->assessment_id, $data, $api_response->included);
             }
 
-            foreach ($api_response->included as $data) {
-                if ($data->type == "user"){ 
-                    $this->graders[] = new Grader($data);
+            if (!empty($temp_responses)) {
+                $booklet->setReponses($temp_responses);
+            }
+
+            if (isset($api_response->included)) {
+                foreach ($api_response->included as $data) {
+                    if ($data->type == "user" && !in_array($data->id, $dup_grader_ids)){ 
+                        // echo($data->attributes->email."<br>");
+                        $dup_grader_ids[] = $data->id;
+                        $this->graders[] = new Grader($data);
+                    }
                 }
             }
+            
         }
     }
 
@@ -188,7 +199,7 @@ class Assessment{
             // var_dump($response->data);
             // echo("</pre>");
 
-             foreach ($response as $data) {
+             foreach ($response->data as $data) {
                 if ($data->type == "response" && $data->attributes->status == "graded"){
                     $temp = $data->relationships->question->links->self;
                     $items = explode("/", $temp);
@@ -227,7 +238,7 @@ class Assessment{
         //     // var_dump($response->data);
         //     // echo("</pre>");
 
-        //      foreach ($response as $data) {
+        //      foreach ($response->data as $data) {
         //         if ($data->type == "response" && $data->attributes->status == "graded"){
         //             $temp = $data->relationships->question->links->self;
         //             $items = explode("/", $temp);
@@ -261,6 +272,11 @@ class Assessment{
     public function getBooklets()
     {
         return $this->booklets;
+    }
+
+    public function getGraders()
+    {
+        return $this->graders;
     }
 
     public function getUploadedCount()

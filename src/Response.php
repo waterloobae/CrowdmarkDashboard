@@ -20,7 +20,7 @@ class Response{
 
     protected array $pages = [];
 
-    public function __construct(string $assessment_id, object $data, object $included)
+    public function __construct(string $assessment_id, object $data, array $included)
     {
         $this->assessment_id = $assessment_id;
         $this->response_id = $data->id;
@@ -39,13 +39,17 @@ class Response{
 
             // if Score?
             if ($item->type == "score" && $item->relationships->response->data->id == $this->response_id) {
-                $this->score = $item->attributes->points;
+                $this->score = $item->attributes->points ?? 0;
                 $this->grader_id = $item->relationships->grader->data->id;
             }
 
             // if Page?
-            if ($item->type == "page" && in_array($this->response_id, $item->relationships->responses->data->id)) {
-                $this->pages[] = new Page($this->assessment_id, $this->booklet_id, $item);
+            if ($item->type == "page"){
+                foreach($item->relationships->responses->data as $page_response) {
+                    if($page_response->id == $this->response_id) {  
+                        $this->pages[] = new Page($this->assessment_id, $this->booklet_id, $item);
+                    }
+                }
             }
         }
     }
@@ -99,5 +103,5 @@ class Response{
     {
         return $this->assessment_id;
     }
-    
+
 }

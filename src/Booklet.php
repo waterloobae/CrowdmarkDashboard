@@ -39,6 +39,11 @@ class Booklet{
         }
     }
 
+    public function setReponses(array $responses)
+    {
+        $this->responses = $responses;
+    }
+
     public function getResponses()
     {
         return $this->responses;
