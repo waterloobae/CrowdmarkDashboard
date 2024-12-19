@@ -48,7 +48,7 @@ Page.php needs to be coded.
 **GET the second page of booklets**  
 `https://app.crowdmark.com/api/assessments/{assessment id}/booklets?page%5Bnumber%5D=2&api_key=your_api_key`
 
-## Class Structure
+## Class Dependency
 
 ```mermaid
 flowchart TD
@@ -56,6 +56,7 @@ flowchart TD
     n2 --> n3["Course"]
     n3 --> n4["Assessment"]
     n4 --> n5["Booklet"] & n9["Question"]
+    n5 -- Pages without Responses --> n10["Page"]
     n5 --> n6["Response"]
     n6 --> n7["Page"]
     n4 --> n8["Grader"]

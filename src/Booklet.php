@@ -15,6 +15,7 @@ class Booklet{
     protected int $responses_count;    
     protected string $booklet_link;
     protected array $responses = [];
+    protected array $pages = []; // For pages without responses like cover page, instructions, etc.
 
     public function __construct(string $assessment_id, object $booklet)
     {

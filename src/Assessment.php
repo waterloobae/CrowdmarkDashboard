@@ -173,86 +173,61 @@ class Assessment{
     // This must be rewritten to used after running getResponses() 
     public function setGradedCountsFromBooklets()
     {
+        // $sequence = [];
+        // foreach($this->questions as $question){
+        //     $sequence[ $question->getQuestionName() ] = $question->getQuestionSequenceNumber();
+        //     $this->graded_counts[$question->getQuestionSequenceNumber()] = 0;
+        // }
 
-        foreach($this->questions as $question){
-            $sequence[ $question->getQuestionName() ] = $question->getQuestionSequenceNumber();
-            $this->graded_counts[$question->getQuestionSequenceNumber()] = 0;
+        if (empty($this->graders)) {
+            $this->setResponses($this->booklets);
         }
-
-        echo "==== Response Debug ====<br>";
-        echo("<pre>");
-        var_dump($sequence);
-        echo("</pre>");
-
 
         foreach($this->booklets as $booklet){
-            $end_points[] = 'api/booklets/' . $booklet->getBookletId() . '/responses';
-        }
-
-        $api = new API();
-        $api->multiExec($end_points);
-        $responses = $api->getResponses();
-
-        foreach($responses as $response){
-            // echo "==== Response Debug ====<br>";
-            // echo("<pre>");
-            // var_dump($response->data);
-            // echo("</pre>");
-
-             foreach ($response->data as $data) {
-                if ($data->type == "response" && $data->attributes->status == "graded"){
-                    $temp = $data->relationships->question->links->self;
-                    $items = explode("/", $temp);
-                    $question_label = end($items);
-                    $this->graded_counts[$sequence[$question_label]] += 1;
+            foreach ($booklet->getResponses() as $response) {
+               if ($response->getIsGradedStatus() == "graded") {
+                    $temp = $response->getQuestionLabel();
+                    if (!isset($this->graded_counts[$temp])) {
+                        $this->graded_counts[$temp] = 0;
+                    }
+                    $this->graded_counts[$temp] += 1;
                 }
             }
         }
         
         // Sorting by sequence number
         ksort($this->graded_counts, 1);
-        
-
     }
-
 
     // This will be used for attendency check
     public function setMatchedEmailList()
     {
+        $end_points = [];
+        if(empty($this->booklets)) {
+            $this->setBooklets($this->assessment_id);
+        }
+
         foreach($this->booklets as $booklet) {
             if ($booklet->getEnrollmentId() !== "NA") {
-                $this->matched_email_list[] = $booklet->getEnrollmentId();
+                $end_points[] = 'api/enrollments/' . $booklet->getEnrollmentId();
+            }
+        }        
+
+        $api = new API();
+        $api->multiExec($end_points);
+        $responses = $api->getResponses();
+        
+        foreach($responses as $response){
+            if(isset($response->included)){
+                foreach($response->included as $data){
+                    if($data->type == "user" && !empty(trim($data->attributes->email))){
+                        $this->matched_email_list[] = $data->attributes->email;
+                    }
+                }
             }
         }
-        foreach($this->booklets as $booklet){
-            $end_points[] = 'api/booklets/' . $booklet->getBookletId() . '/responses';
-        }
-
-        // $api = new API();
-        // $api->multiExec($end_points);
-        // $responses = $api->getResponses();
-
-        // foreach($responses as $response){
-        //     // echo "==== Response Debug ====<br>";
-        //     // echo("<pre>");
-        //     // var_dump($response->data);
-        //     // echo("</pre>");
-
-        //      foreach ($response->data as $data) {
-        //         if ($data->type == "response" && $data->attributes->status == "graded"){
-        //             $temp = $data->relationships->question->links->self;
-        //             $items = explode("/", $temp);
-        //             $question_label = end($items);
-        //             $this->graded_counts[$sequence[$question_label]] += 1;
-        //         }
-        //     }
-        // }
-        
-        // // Sorting by sequence number
-        // ksort($this->graded_counts, 1);
         
     }
-
 
     public function getQuestions()
     {
@@ -294,4 +269,8 @@ class Assessment{
         return $this->graded_counts;
     }
 
+    public function getMatchedEmailList()
+    {
+        return $this->matched_email_list;
+    }
 }

@@ -13,7 +13,8 @@ $assessments = [];
 $crowdmark = new Crowdmark();
 
 // ==============================
-// This script list Booklets whose response Count is off
+// This script list Booklets whose response Count is off.
+// It hardly happens, but it is good to check.
 // ==============================
 
 echo("Start Time:" . date("Y-m-d H:i:s") . "<br>");
