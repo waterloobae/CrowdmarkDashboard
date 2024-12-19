@@ -83,5 +83,5 @@ graph TD
     n8 --> n9["Page"]
 
     %% Question to Response
-    n5 -- Times out for Big Assessment --> n8
+    %% n5 -- Times out for Big Assessment --> n8
 ```
