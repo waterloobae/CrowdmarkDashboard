@@ -77,7 +77,7 @@ graph TD
 
     %% Booklet connections
     n6 -- Pages without Responses --> n10["Page"]
-    n7 --> n8["Response"]
+    n6 --> n8["Response"]
 
     %% Response connections
     n8 --> n9["Page"]
