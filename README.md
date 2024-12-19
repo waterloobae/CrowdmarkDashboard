@@ -63,7 +63,6 @@ flowchart TD
     n4 --> n8["Grader"]
     n9 -- Times out for Big Assessment --> n6
     
-```mermaid
 graph TD
     n1["Dashboard"] --> n2["Crowdmark<br>"]
     n2 --> n3["Course"]
