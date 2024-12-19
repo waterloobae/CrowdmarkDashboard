@@ -63,3 +63,23 @@ flowchart TD
     n4 --> n8["Grader"]
     n9 -- Times out for Big Assessment --> n6
     
+```mermaid
+graph TD
+    n1["Dashboard"] --> n2["Crowdmark<br>"]
+    n2 --> n3["Course"]
+    n3 --> n4["Assessment"]
+
+    %% Reordering Question, Booklet, and Grader under Assessment
+    n4 --> n9["Question"]
+    n4 --> n5["Booklet"]
+    n4 --> n8["Grader"]
+
+    %% Booklet connections
+    n5 -- Pages without Responses --> n10["Page"]
+    n5 --> n6["Response"]
+
+    %% Response connections
+    n6 --> n7["Page"]
+
+    %% Question to Response
+    n9 -- Times out for Big Assessment --> n6
