@@ -71,44 +71,17 @@ graph TD
     n3 --> n4["Assessment"]
 
     %% Reordering Question, Booklet, and Grader under Assessment
-    n4 --> n9["Question"]
-    n4 --> n5["Booklet"]
-    n4 --> n8["Grader"]
+    n4 --> n5["Question"]
+    n4 --> n6["Booklet"]
+    n4 --> n7["Grader"]
 
     %% Booklet connections
-    n5 -- Pages without Responses --> n10["Page"]
-    n5 --> n6["Response"]
+    n6 -- Pages without Responses --> n10["Page"]
+    n7 --> n8["Response"]
 
     %% Response connections
-    n6 --> n7["Page"]
+    n8 --> n9["Page"]
 
     %% Question to Response
-    n9 -- Times out for Big Assessment --> n6
-```
-
-```mermaid
-graph TD
-    n1["Dashboard"] --> n2["Crowdmark<br>"]
-    n2 --> n3["Course"]
-    n3 --> n4["Assessment"]
-
-    %% Group Question, Booklet, and Grader
-    subgraph Assessment_Elements
-        n9["Question"]
-        n5["Booklet"]
-        n8["Grader"]
-    end
-    n4 --> n9
-    n4 --> n5
-    n4 --> n8
-
-    %% Booklet connections
-    n5 -- Pages without Responses --> n10["Page"]
-    n5 --> n6["Response"]
-
-    %% Response connections
-    n6 --> n7["Page"]
-
-    %% Question to Response
-    n9 -- Times out for Big Assessment --> n6
+    n5 -- Times out for Big Assessment --> n8
 ```
