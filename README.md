@@ -51,20 +51,6 @@ Page.php needs to be coded.
 ## Class Dependency
 
 ```mermaid
-flowchart TD
-    n1["Dashboard"] --> n2["Crowdmark<br>"]
-    n2 --> n3["Course"]
-    n3 --> n4["Assessment"]
-    n4 --> n9["Question"]
-    n4 --> n5["Booklet"] 
-    n5 -- Pages without Responses --> n10["Page"]
-    n5 --> n6["Response"]
-    n6 --> n7["Page"]
-    n4 --> n8["Grader"]
-    n9 -- Times out for Big Assessment --> n6
-```
-
-```mermaid
 graph TD
     n1["Dashboard"] --> n2["Crowdmark<br>"]
     n2 --> n3["Course"]
@@ -85,3 +71,5 @@ graph TD
     %% Question to Response
     %% n5 -- Times out for Big Assessment --> n8
 ```
+It is possible to get Responses from Question, however, it times out for those big Assessments.
+
