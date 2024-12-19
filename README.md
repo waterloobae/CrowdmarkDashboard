@@ -71,5 +71,5 @@ graph TD
     %% Question to Response
     %% n5 -- Times out for Big Assessment --> n8
 ```
-It is possible to get Responses from Question, however, it times out for those big Assessments.
+It is possible to get Responses from Question, however, it times out for big Assessments.
 

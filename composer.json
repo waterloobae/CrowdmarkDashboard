@@ -1,9 +1,14 @@
 {
     "name": "waterloobae/drowdmark-dashboard",
+    "description": "A dashboard for crowdmark",
+    "version": "0.1.0",
+    "require": {
+        "setasign/fpdf": "^1.8",
+        "setasign/fpdi": "^2.3"
+    },
     "autoload": {
         "psr-4": {
             "Waterloobae\\CrowdmarkDashboard\\": "src"
         }
     }
-
 }

@@ -123,6 +123,37 @@ class Assessment{
         }
     }
 
+    public function setCoverPages($booklets)
+    {
+        foreach($booklets as $booklet){
+            $end_points[] = 'api/booklets/' . $booklet->getBookletId() . '/pages';
+        }
+
+        $api = new API();
+        $api->multiExec($end_points);
+        $api_responses = $api->getResponses();
+
+        foreach($api_responses as $api_response){
+            $temp_pages = [];
+            $booklet_id = preg_replace('/\D/', '', $api_response->links->self);
+
+            foreach ($api_response->data as $data) {
+                if($data->type == "page" && $data->attributes->number == 1){
+                    $temp_pages[] = new Page($this->assessment_id, $booklet_id, $data);
+                }
+            }
+
+            foreach ($booklets as $booklet) {
+                if ($booklet->getBookletId() == $booklet_id) {
+                    if (!empty($temp_pages)) {
+                        $booklet->setPages($temp_pages);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
     public function setGradedCounts()
     {
         // This will be faster than setGradedCountsFromBooklets, but

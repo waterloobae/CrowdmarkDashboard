@@ -45,6 +45,11 @@ class Booklet{
         $this->responses = $responses;
     }
 
+    public function setPages(array $pages)
+    {
+        $this->pages = $pages;
+    }
+
     public function getResponses()
     {
         return $this->responses;
@@ -73,5 +78,10 @@ class Booklet{
     public function getBookletNumber()
     {
         return $this->booklet_number;
+    }
+
+    public function getPages()
+    {
+        return $this->pages;
     }
 }
