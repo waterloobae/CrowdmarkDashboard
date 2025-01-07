@@ -19,6 +19,9 @@ $crowdmark = new Crowdmark();
 
 echo("Start Time:" . date("Y-m-d H:i:s") . "<br>");
 
+$crowdmark->downloadCoverPages(['csmc-french-c70d7']);
+
+/*** 
 foreach($crowdmark->getCourseIds() as $course_id) {
 
     $course = new Course($course_id);
@@ -44,8 +47,6 @@ foreach($assessments as $assessment) {
             }
 }
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
 $pdf = new Fpdi();
 foreach ($pageUrls as $url) {
     $image = file_get_contents($url);
@@ -63,6 +64,8 @@ $dateTime = date("Ymd_His");
 $pdfOutputPath = __DIR__ . "/cover_pages_$dateTime.pdf";
 $pdf->Output($pdfOutputPath, 'F');
 echo "PDF created at: " . $pdfOutputPath . "<br>";
+***/
+
 
 echo("<pre>");
 var_dump($pageUrls);
