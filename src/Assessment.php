@@ -20,6 +20,7 @@ class Assessment{
     protected array $booklets = [];
     protected array $graders = [];
     protected array $matched_email_list = [];
+    protected array $student_csv_list = []; 
 
     // Total counts
     protected int $uploaded_count = 0;
@@ -252,6 +253,7 @@ class Assessment{
             if(isset($response->included)){
                 foreach($response->included as $data){
                     if($data->type == "user" && !empty(trim($data->attributes->email))){
+
                         $this->matched_email_list[] = $data->attributes->email;
                     }
                 }
@@ -259,6 +261,45 @@ class Assessment{
         }
         
     }
+
+
+   // This will be used for attendency check
+   public function setStdentCSVList()
+   {
+       $end_points = [];
+       if(empty($this->booklets)) {
+           $this->setBooklets($this->assessment_id);
+       }
+
+       foreach($this->booklets as $booklet) {
+           if ($booklet->getEnrollmentId() !== "NA") {
+               $end_points[] = 'api/enrollments/' . $booklet->getEnrollmentId();
+           }
+       }        
+
+       $api = new API();
+       $api->multiExec($end_points);
+       $responses = $api->getResponses();
+       
+       foreach($responses as $response){
+           if(isset($response->included)){
+               foreach($response->included as $data){
+                   if($data->type == "user" && !empty(trim($data->attributes->email))){
+                       $email = $data->attributes->email;
+                   }
+               }
+
+                $temp = "First Name";
+                $first_name = $response->data->attributes->metadata->$temp;
+                $temp = "Last Name";
+                $last_name = $response->data->attributes->metadata->$temp;               
+                $temp = "Student ID";
+                $student_id = $response->data->attributes->metadata->$temp;
+
+           }
+           $this->student_csv_list[] = $email .",". $first_name . "," . $last_name . "," . $student_id;
+       }
+   }    
 
     public function getQuestions()
     {
@@ -304,4 +345,9 @@ class Assessment{
     {
         return $this->matched_email_list;
     }
+
+    public function getStudentCSVList(){
+        return $this->student_csv_list;
+    }
+
 }

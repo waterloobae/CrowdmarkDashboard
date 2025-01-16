@@ -20,6 +20,7 @@ $crowdmark = new Crowdmark();
 echo("Start Time:" . date("Y-m-d H:i:s") . "<br>");
 
 foreach($crowdmark->getCourseIds() as $course_id) {
+
     $course = new Course($course_id);
     if ($course->getCourseName() == "CSMC 2024 G") {
         $assessment_ids = array_merge($assessment_ids, $course->getAssessmentIds());
@@ -28,10 +29,16 @@ foreach($crowdmark->getCourseIds() as $course_id) {
 
 foreach($assessment_ids as $assessment_id) {
     $temp = new Assessment($assessment_id);
-    $temp->setMatchedEmailList();
+    $temp->setGradedCountsFromBooklets();
 
+    $graded_counts = $temp->getGradedCounts();
+    uasort($graded_counts, function($a, $b) {
+        return strcmp($a, $b);
+    });
     echo("<pre>");
-    var_dump($temp ->getMatchedEmailList());
+    var_dump($graded_counts);
     echo("</pre>");
+
 }   
+
 echo("End Time:" . date("Y-m-d H:i:s") . "<br>");

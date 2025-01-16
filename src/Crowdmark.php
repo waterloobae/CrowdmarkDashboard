@@ -50,30 +50,65 @@ class Crowdmark
 
     public function createDownloadLinks(string $type, array $course_names, string $page_number = null)
     {
-        if($type == "page") {
+        $valid_encoded_course_names = [];
+        $relativePath = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
+        
+        switch($type) {
+            case "page":
+                echo "<h2>Download Pages</h2>";
+                break;
+            case "studentinfo":
+                echo "<h2>Download Student Information</h2>";
+                break;
+        }
+        
         foreach($course_names as $course_name) {
-                $is_valid = false;
-
-                foreach($this->courses as $course) {
-                    if($course->getCourseName() == $course_name) {
-                        $is_valid = true;
-                        break;
-                    }
+            $is_valid = false;
+            
+            foreach($this->courses as $course) {
+                if($course->getCourseName() == $course_name) {
+                    $is_valid = true;
+                    break;
                 }
-
-                $relativePath = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
-                $encoded_course_name = urlencode($course_name);
-                $download_link = $relativePath."/Download.php?type=" . $type . "&course_name=" . $encoded_course_name. "&page_number=" . $page_number;
-                
-                if($is_valid) {
-                    echo '<a href="' . $download_link . '" download onclick="this.innerText=\'Loading '.$course_name.'...Please wait!\'; this.style.pointerEvents = \'none\';">Download PDF (' . $course_name . ')</a><br>';
-                } else {
-                    echo "Invalid course name: " . $course_name . "<br>";
-                }
-
-                // echo '<a href="'. $download_link . '" download>Download PDF ('.$course_name.') </a><br>';
+            }
+            $encoded_course_name = urlencode($course_name);
+            
+            $download_link = $relativePath."/Download.php?type=" . $type . "&course_name=" . $encoded_course_name. "&page_number=" . $page_number;
+            if($is_valid) {
+                $valid_encoded_course_names[] = $encoded_course_name;    
+                echo '<a href="' . $download_link . '" download onclick="this.innerText=\'Loading '.$course_name.'. Please wait!\'; this.style.pointerEvents = \'none\';">Download (' . $course_name . ')</a><br>';
+            } else {
+                echo "Invalid course name: " . $course_name . "<br>";
             }
         }
+
+        echo("<br>");
+        if(empty($valid_encoded_course_names)) {
+            echo "No valid course names found.";
+        }else{
+            $download_link = $relativePath."/Download.php?type=" . $type . "&course_name=" . implode("~", $valid_encoded_course_names). "&page_number=" . $page_number;
+            echo '<a href="' . $download_link . '" download onclick="this.innerText=\'Loading All Courses. Please wait!\'; this.style.pointerEvents = \'none\';">Download All</a><br>';
+        }
+    }
+
+    //=================================
+    // Functions with Business Logic
+    //=================================
+    public function generateStudentInformation(array $assessment_ids){
+        $student_list = [];
+        $student_list[] = "Email, First Name, Last Name, Participant ID";
+
+        foreach($assessment_ids as $assessment_id) {
+            $temp = new Assessment($assessment_id);
+            $temp->setStdentCSVList();
+            $student_list = array_merge($student_list, $temp->getStudentCSVList());
+        }   
+        // Download the EmailList as a txt file
+        $datetime = date('Ymd-His');
+        header('Content-Type: text/plain');
+        header('Content-Disposition: attachment; filename="student_list_' . $datetime . '.csv"');
+        echo implode("\n", $student_list);
+        exit;
     }
 
     public function downloadPagesByPageNumber(array $assessment_ids, string $page_number)
@@ -143,6 +178,11 @@ class Crowdmark
         // echo '<a href="'. sys_get_temp_dir() . $dateTime . '.pdf" download>Download PDF</a>';
     }
     
+
+    //=================================
+    // Ordinary Setters and Getters
+    //=================================
+
     public function getCourses()
     {
         return $this->courses;
