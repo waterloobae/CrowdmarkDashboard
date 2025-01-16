@@ -55,7 +55,7 @@ class Crowdmark
         
         switch($type) {
             case "page":
-                echo "<h2>Download Pages</h2>";
+                echo "<h2>Download Booklet Pages</h2>";
                 break;
             case "studentinfo":
                 echo "<h2>Download Student Information</h2>";
@@ -87,8 +87,9 @@ class Crowdmark
             echo "No valid course names found.";
         }else{
             $download_link = $relativePath."/Download.php?type=" . $type . "&course_name=" . implode("~", $valid_encoded_course_names). "&page_number=" . $page_number;
-            echo '<a href="' . $download_link . '" download onclick="this.innerText=\'Loading All Courses. Please wait!\'; this.style.pointerEvents = \'none\';">Download All</a><br>';
+            echo '<a href="' . $download_link . '" download onclick="this.innerText=\'Loading All Courses. Please wait!\'; this.style.pointerEvents = \'none\';">Download All Course</a><br>';
         }
+        echo("<br>");
     }
 
     //=================================
