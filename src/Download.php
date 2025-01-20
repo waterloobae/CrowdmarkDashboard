@@ -39,6 +39,15 @@ class Download{
     public function generateGradingStatus(){
         $this->crowdmark->generateGradingStatus($this->assessment_ids);
     }
+
+    public function generateUploadedMatchedCounts(){
+        $this->crowdmark->generateUploadedMatchedCounts($this->assessment_ids);
+    }
+
+    public function generateIntegrityCheckReport(){
+        $this->crowdmark->generateIntegrityCheckReport($this->assessment_ids);
+    }
+
 }
 
 $download = new Download();
@@ -58,4 +67,11 @@ switch($_GET['type']){
     case "grading":
         $download->generateGradingStatus();
         break;
+    case "uploadedmatched":
+        $download->generateUploadedMatchedCounts();
+        break;
+    case "integritycheck":
+        $download->generateIntegrityCheckReport();
+        break;
+
 }

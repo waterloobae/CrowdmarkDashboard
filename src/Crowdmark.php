@@ -69,6 +69,12 @@ class Crowdmark
             case "grading":
                 echo "<h2>Download Grading Status</h2>";
                 break;
+            case "uploadedmatched":
+                echo "<h2>Download Uploaded and Matched Counts</h2>";
+                break;
+            case "integritycheck":
+                echo "<h2>Download Integrity Check Report</h2>";
+                break;
         }
         
         foreach($course_names as $course_name) {
@@ -105,6 +111,75 @@ class Crowdmark
     //
     // Functions with Business Logic
     //=================================
+    public function generateIntegrityCheckReport(array $assessment_ids)
+    {
+        $assessments = [];
+        foreach($assessment_ids as $assessment_id) {
+            $temp = new Assessment($assessment_id);
+            $temp->setResponses($temp->getBooklets());
+            $assessments[] = $temp;
+        }   
+
+        $filename = 'Integrity_Check_Report-' . date('Ymd-His') . '.csv';
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['Course Name', 'Assessment Name', 'Booklet Number', 'Booklet ID', 'Responses Count', 'Enrollment ID']);
+
+        foreach($assessments as $assessment) {
+            $response_count = count($assessment->getQuestions());
+            foreach($assessment->getBooklets() as $booklet) {
+                if( ($booklet->getResponsesCount() > 0 && $booklet->getEnrollmentId() == "NA") ||
+                    ($booklet->getResponsesCount() != $response_count && $booklet->getEnrollmentId() != "NA")) {                    
+                    fputcsv($output, [
+                        $assessment->getCourseName(),
+                        $assessment->getAssessmentName(),
+                        $booklet->getBookletNumber(),
+                        $booklet->getBookletId(),
+                        $booklet->getResponsesCount(),
+                        $booklet->getEnrollmentId()
+                    ]);
+                }
+            }
+        }
+        
+        fclose($output);
+        exit();
+
+    }
+
+    public function generateUploadedMatchedCounts(array $assessment_ids){
+        $assessments = [];
+        foreach($assessment_ids as $assessment_id) {
+            $temp = new Assessment($assessment_id);
+            $temp->setUploadedAndMatchedCounts();
+            $assessments[] = $temp;
+        }   
+
+        $totalUploaded = 0;
+        $totalMatched = 0;
+
+        $filename = 'Uploaded_Matched-' . date('Ymd-His') . '.csv';
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['Assessment ID', 'Uploaded', 'Matched']);
+
+        foreach ($assessments as $assessment) {
+            $totalUploaded += $assessment->getUploadedCount();
+            $totalMatched += $assessment->getMatchedCount();        
+            fputcsv($output, [
+                $assessment->getAssessmentName(),
+                $assessment->getUploadedCount(),
+                $assessment->getMatchedCount()
+            ]);
+        }
+
+        fputcsv($output, ['Total', $totalUploaded, $totalMatched]);
+        fclose($output);
+        exit;
+    }
+
     public function generateGradingStatus(array $assessment_ids)
     {
         $graded_counts = [];
