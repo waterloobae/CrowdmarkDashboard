@@ -1,15 +1,8 @@
 <?php
 namespace Waterloobae\CrowdmarkDashboard;
 require_once __DIR__ . '/../vendor/autoload.php';
-//include_once '../src/Course.php';
-use Waterloobae\CrowdmarkDashboard\Course;
-use Waterloobae\CrowdmarkDashboard\Assessment;
-use Waterloobae\CrowdmarkDashboard\Booklet;
 use Waterloobae\CrowdmarkDashboard\Crowdmark;
 
-//$crowdmark = new Crowdmark('courses');
-$assessment_ids = [];
-$assessments = [];
 $crowdmark = new Crowdmark();
 
 // ==============================
@@ -17,28 +10,9 @@ $crowdmark = new Crowdmark();
 // It hardly happens, but it is good to check.
 // ==============================
 
-echo("Start Time:" . date("Y-m-d H:i:s") . "<br>");
+$start_time = "Start Time:" . date("Y-m-d H:i:s") . "<br>";
+echo($start_time);
 
-foreach($crowdmark->getCourseIds() as $course_id) {
-
-    $course = new Course($course_id);
-    if ($course->getCourseName() == "CSMC 2024 G") {
-        $assessment_ids = array_merge($assessment_ids, $course->getAssessmentIds());
-    }
-}
-
-foreach($assessment_ids as $assessment_id) {
-    $temp = new Assessment($assessment_id);
-    $temp->setGradedCountsFromBooklets();
-
-    $graded_counts = $temp->getGradedCounts();
-    uasort($graded_counts, function($a, $b) {
-        return strcmp($a, $b);
-    });
-    echo("<pre>");
-    var_dump($graded_counts);
-    echo("</pre>");
-
-}   
+$crowdmark->createDownloadLinks('grading', ['CIMC 2024 French', 'Course A', 'CSMC 2024 French']);
 
 echo("End Time:" . date("Y-m-d H:i:s") . "<br>");

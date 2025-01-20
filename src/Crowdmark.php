@@ -60,6 +60,15 @@ class Crowdmark
             case "studentinfo":
                 echo "<h2>Download Student Information</h2>";
                 break;
+            case "studentemaillist":
+                echo "<h2>Download Student Email List</h2>";
+                break;
+            case "grader":
+                echo "<h2>Download Grader's Grading List</h2>";
+                break;
+            case "grading":
+                echo "<h2>Download Grading Status</h2>";
+                break;
         }
         
         foreach($course_names as $course_name) {
@@ -93,8 +102,162 @@ class Crowdmark
     }
 
     //=================================
+    //
     // Functions with Business Logic
     //=================================
+    public function generateGradingStatus(array $assessment_ids)
+    {
+        $graded_counts = [];
+        foreach($assessment_ids as $assessment_id) {
+            $temp = new Assessment($assessment_id);
+            $graded_counts['course'] = $temp->getCourseName();
+            $courseName = $graded_counts['course'];
+            $temp->setUploadedAndMatchedCounts();
+            $temp->setGradedCountsFromBooklets();
+        
+            $graded_counts[$courseName]['!booket_count'] = $temp->getUploadedCount();
+            // Add counts per course, excluding '!course'
+            foreach ($temp->getGradedCounts() as $key => $value) {
+                if ($key !== 'course') {
+                    if (!isset($graded_counts[$courseName][$key])) {
+                        $graded_counts[$courseName][$key] = 0;
+                    }
+                    $graded_counts[$courseName][$key] += $value;
+                }
+            }
+        }
+        
+         foreach ($graded_counts as &$subarray) {
+            if (is_array($subarray)) {
+                ksort($subarray);
+            }
+        }
+        
+        $filename = "graded_counts_" . date("Ymd-His") . ".csv";
+        
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        
+        $output = fopen('php://output', 'w');
+        
+        // Get headers from the first subarray
+        $headers = ['Course'];
+        foreach($graded_counts as $firstSubarray) {
+            if(is_array($firstSubarray)){
+                break;
+            }
+        }
+        $headers = array_merge($headers, array_keys($firstSubarray));
+        fputcsv($output, $headers);
+
+        foreach ($graded_counts as $course => $counts) {
+            if(is_array($counts)){
+                $row = array_merge([$course], $counts);
+                fputcsv($output, $row);
+            }
+        }
+        
+        fclose($output);
+        exit;
+    }
+
+    public function generateGradersGradingList(array $assessment_ids){
+        foreach($assessment_ids as $assessment_id) {
+            $temp = new Assessment($assessment_id);
+            $temp->setResponses($temp->getBooklets());
+            $assessments[] = $temp;
+        }   
+        
+        $question_id_to_names = [];
+        $grader_id_to_names = [];
+        $grader_id_to_emails = [];
+        $grades = [];
+        
+        foreach($assessments as $assessment) {
+            // 1. Creating questions array
+            foreach($assessment->getQuestions() as $question) {
+                $question_id_to_names[$question->getQuestionId()] = $question->getQuestionName();
+            }
+        
+            // 2. Creating Graders array
+            foreach($assessment->getGraders() as $grader) {
+                $grader_id_to_names[$grader->getUserId()] = $grader->getName();
+                $grader_id_to_emails[$grader->getUserId()] = $grader->getEmail();
+                //echo($grader->getEmail() . "<br>");
+            }
+        }
+        
+        // Sort questions by question name
+        uasort($question_id_to_names, function($a, $b) {
+            return strcmp($a, $b);
+        });
+        
+        foreach($assessments as $assessment) {
+            // 3. Creating Grade Counts array
+            foreach($assessment->getBooklets() as $booklet) {
+                foreach($booklet->getResponses() as $response) {
+                    if (!isset($grades[$response->getGraderId()][$response->getQuestionLabel()])) {
+                        $grades[$response->getGraderId()][$response->getQuestionLabel()] = 0;
+                    }
+                    $grades[$response->getGraderId()][$response->getQuestionLabel()]++;
+                }
+            }
+        }
+        
+        // Sort graders by name and then by question label
+        uksort($grades, function($a, $b) use ($grader_id_to_names) {
+            return strcmp($grader_id_to_names[$a] ?? 'Unknown', $grader_id_to_names[$b] ?? 'Unknown');
+        });
+        
+        // Set headers to download the CSV file
+        $filename = 'graders_' . date('Ymd-His') . '.csv';
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=' . $filename);
+        
+        // Open the output stream
+        $fp = fopen('php://output', 'w');
+        
+        // Write the header
+        $header = ['Grader Name', 'Grader Email'];
+        $question_labels = array_unique(array_merge(...array_values(array_map('array_keys', $grades))));
+        sort($question_labels);
+        
+        $header = array_merge($header, array_map('strtoupper', $question_labels));
+        fputcsv($fp, $header);
+        
+        // Write the data
+        foreach ($grades as $grader_id => $questions) {
+            $row = [
+                $grader_id_to_names[$grader_id] ?? 'Unknown',
+                $grader_id_to_emails[$grader_id] ?? 'Unknown'
+            ];
+            foreach ($question_labels as $label) {
+                $row[] = $questions[$label] ?? 0;
+            }
+            fputcsv($fp, $row);
+        }
+        
+        fclose($fp);
+        exit();        
+    }
+
+
+    public function generateStudentEmailList(array $assessment_ids){
+        $email_list = [];
+
+        foreach($assessment_ids as $assessment_id) {
+            $temp = new Assessment($assessment_id);
+            $temp->setMatchedEmailList();
+            $email_list = array_merge($email_list, $temp->getMatchedEmailList());
+        }   
+        // Download the EmailList as a txt file
+        $datetime = date('Ymd-His');
+        header('Content-Type: text/plain');
+        header('Content-Disposition: attachment; filename="student_email_list_' . $datetime . '.txt"');
+        echo implode("\n", $email_list);
+        exit;
+    }
+
     public function generateStudentInformation(array $assessment_ids){
         $student_list = [];
         $student_list[] = "Email, First Name, Last Name, Participant ID";

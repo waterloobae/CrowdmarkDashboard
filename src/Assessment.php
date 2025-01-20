@@ -10,6 +10,9 @@ use Waterloobae\CrowdmarkDashboard\Grader;
 use Exception;
 
 class Assessment{
+    protected string $course_id;
+    protected string $course_name;
+
     protected string $assessment_id;
     protected string $assessment_name;
     protected string $created_at;
@@ -44,6 +47,13 @@ class Assessment{
         // "-" does not work in PHP Standard Ojbect variable names
         $temp = "created-at";
         $this->created_at = $this->response->data->attributes->$temp;
+
+        foreach($this->response->included as $data){
+            if($data->type == "course"){
+                $this->course_id = $data->id;
+                $this->course_name = $data->attributes->name;
+            }
+        }
 
         $this->setQuestions($assessment_id);
         $this->setBooklets($assessment_id);
@@ -348,6 +358,16 @@ class Assessment{
 
     public function getStudentCSVList(){
         return $this->student_csv_list;
+    }
+
+    public function getCourseID()
+    {
+        return $this->course_id;
+    }
+
+    public function getCourseName()
+    {
+        return $this->course_name;
     }
 
 }

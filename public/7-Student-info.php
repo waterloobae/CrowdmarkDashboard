@@ -13,6 +13,6 @@ $crowdmark = new Crowdmark();
 $start_time = "Start Time:" . date("Y-m-d H:i:s") . "<br>";
 echo($start_time);
 
-$crowdmark->createDownloadLinks('studentinfo', ['Course A', 'CSMC 2024 French']);
+$crowdmark->createDownloadLinks('studentinfo', ['CIMC 2024 French', 'Course A', 'CSMC 2024 French']);
 
 echo("End Time:" . date("Y-m-d H:i:s") . "<br>");
