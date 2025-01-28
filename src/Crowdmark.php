@@ -355,34 +355,17 @@ class Crowdmark
         $assessments = [];
         foreach($assessment_ids as $assessment_id) {
             $temp = new Assessment($assessment_id);
-            if($page_number == '1'){
-                $temp->setCoverPages($temp->getBooklets());
-            }else{
-                $temp->setResponses($temp->getBooklets());
-            }
+            $temp->setAssessmentPages($temp->getBooklets());
             $assessments[] = $temp;
+
         }   
 
         $pageUrls = [];
         foreach($assessments as $assessment) {
             foreach($assessment->getBooklets() as $booklet) {
-                if($page_number == '1'){
-                    foreach($booklet->getPages() as $page) {
-                        if($page->getPageNumber() == $page_number){
-                            $pageUrls[] = $page->getPageUrl();
-                        }
-                    }
-                }else{
-                    foreach($booklet->getResponses() as $response) {
-                        foreach($response->getPages() as $page) {
-                            // Some of $page is not an instance of Page, but stdClass.
-                            if ($page instanceof Page ) {
-                                //error_log("Page Number: ".$page->getPageNumber());
-                                if($page->getPageNumber() == $page_number){
-                                    $pageUrls[] = $page->getPageUrl();
-                                }
-                            }
-                        }
+                foreach($booklet->getPages() as $page) {
+                    if($page->getPageNumber() == $page_number){
+                        $pageUrls[] = $page->getPageUrl();
                     }
                 }
             }

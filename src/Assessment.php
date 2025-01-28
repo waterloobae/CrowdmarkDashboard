@@ -134,7 +134,7 @@ class Assessment{
         }
     }
 
-    public function setCoverPages($booklets)
+    public function setAssessmentPages($booklets)
     {
         foreach($booklets as $booklet){
             $end_points[] = 'api/booklets/' . $booklet->getBookletId() . '/pages';
@@ -149,7 +149,8 @@ class Assessment{
             $booklet_id = preg_replace('/\D/', '', $api_response->links->self);
 
             foreach ($api_response->data as $data) {
-                if($data->type == "page" && $data->attributes->number == 1){
+                if($data->type == "page"){
+                //if($data->type == "page" && $data->attributes->number == 1){
                     $temp_pages[] = new Page($this->assessment_id, $booklet_id, $data);
                 }
             }
