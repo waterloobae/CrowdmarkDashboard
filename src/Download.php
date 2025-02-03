@@ -7,14 +7,16 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Waterloobae\CrowdmarkDashboard\Crowdmark;
 
 class Download{
+    private object $logger;
     private object $crowdmark;
     private array $course_names = [];
     private array $assessment_ids = [];
     private string $page_number = "NA";
 
-    public function __construct(){
+    public function __construct( object $logger ){
         // constructor
-        $this->crowdmark = new Crowdmark();
+        $this->logger = $logger;
+        $this->crowdmark = new Crowdmark( $this->logger );
         $this->course_names = explode("~",$_GET['course_name']);
         $this->page_number = $_GET['page_number'];
         $this->assessment_ids = $this->crowdmark->returnAssessmentIDs($this->course_names);
@@ -50,28 +52,29 @@ class Download{
 
 }
 
-$download = new Download();
+$dashboard = new Dashboard();
+
 switch($_GET['type']){
     case "page":
-        $download->downloadPage();
+        $dashboard->getDownload()->downloadPage();
         break;
     case "studentinfo":
-        $download->generateStudentInfo();
+        $dashboard->getDownload()->generateStudentInfo();
         break;
     case "studentemaillist":
-        $download->generateStudentEmailList();
+        $dashboard->getDownload()->generateStudentEmailList();
         break;
     case "grader": 
-        $download->generateGradersGradingList();
+        $dashboard->getDownload()->generateGradersGradingList();
         break;
     case "grading":
-        $download->generateGradingStatus();
+        $dashboard->getDownload()->generateGradingStatus();
         break;
     case "uploadedmatched":
-        $download->generateUploadedMatchedCounts();
+        $dashboard->getDownload()->generateUploadedMatchedCounts();
         break;
     case "integritycheck":
-        $download->generateIntegrityCheckReport();
+        $dashboard->getDownload()->generateIntegrityCheckReport();
         break;
 
 }

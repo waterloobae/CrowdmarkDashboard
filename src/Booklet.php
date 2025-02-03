@@ -7,6 +7,7 @@ use Waterloobae\CrowdmarkDashboard\API;
 use Waterloobae\CrowdmarkDashboard\Response;
 
 class Booklet{
+    protected object $logger;
     protected string $assessment_id;
     protected string $booklet_id;
     protected string $enrollment_id;
@@ -17,8 +18,9 @@ class Booklet{
     protected array $responses = [];
     protected array $pages = []; // For pages without responses like cover page, instructions, etc.
 
-    public function __construct(string $assessment_id, object $booklet)
+    public function __construct(string $assessment_id, object $booklet, object $logger)
     {
+        $this->logger = $logger;
         //var_dump($booklet);
         //die();
         $this->assessment_id = $assessment_id;
@@ -32,11 +34,11 @@ class Booklet{
     
     public function setResponsesByAPI()
     {
-        $api = new API();
+        $api = new API( $this->logger );
         $api->exec($this->responses_link);
         $api_response = $api->getResponse();
         foreach ($api_response->data as $data) {
-            $this->responses[] = new Response($this->assessment_id, $data, $api_response->included);
+            $this->responses[] = new Response($this->assessment_id, $data, $api_response->included, $this->logger);
         }
     }
 

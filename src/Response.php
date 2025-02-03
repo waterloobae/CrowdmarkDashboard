@@ -6,6 +6,7 @@ use Waterloobae\CrowdmarkDashboard\API;
 use Waterloobae\CrowdmarkDashboard\Page;
 
 class Response{
+    protected object $logger;
     protected string $assessment_id;
     protected string $booklet_id;
     protected string $response_id;
@@ -20,8 +21,9 @@ class Response{
 
     protected array $pages = [];
 
-    public function __construct(string $assessment_id, object $data, array $included)
+    public function __construct(string $assessment_id, object $data, array $included, object $logger)
     {
+        $this->logger = $logger;
         $this->assessment_id = $assessment_id;
         $this->response_id = $data->id;
         $this->question_id = $data->relationships->question->data->id;
@@ -47,7 +49,7 @@ class Response{
             if ($item->type == "page"){
                 foreach($item->relationships->responses->data as $page_response) {
                     if($page_response->id == $this->response_id) {  
-                        $this->pages[] = new Page($this->assessment_id, $this->booklet_id, $item);
+                        $this->pages[] = new Page($this->assessment_id, $this->booklet_id, $item, $this->logger);
                     }
                 }
             }

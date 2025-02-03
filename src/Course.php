@@ -7,6 +7,7 @@ use Waterloobae\CrowdmarkDashboard\API;
 use Waterloobae\CrowdmarkDashboard\Assessment;
 
 class Course{
+    protected object $logger;
     protected string $course_id;
     protected string $course_name;
     protected string $created_at;
@@ -15,12 +16,13 @@ class Course{
     protected array $assessments = [];
     protected array $assessment_ids = [];    
 
-    public function __construct($course_id)
+    public function __construct($course_id, object $logger)
     {
+        $this->logger = $logger;
         $this->course_id = $course_id;
 
         $this->end_point = 'api/courses/' . $course_id;
-        $api = new API();
+        $api = new API( $this->logger );
         $api->exec($this->end_point);
         $this->response = $api->getResponse();
         $this->course_name = $this->response->data->attributes->name;
@@ -36,7 +38,7 @@ class Course{
 
     public function setAssessment($course_id)
     {
-        $api = new API();
+        $api = new API( $this->logger );
         $api->exec('api/courses/' . $course_id . '/assessments');
         $response = $api->getResponse();
         foreach ($response->data as $assessment) {
@@ -46,7 +48,7 @@ class Course{
 
     public function setAssessmentIds($course_id)
     {
-        $api = new API();
+        $api = new API( $this->logger );
         $api->exec('api/courses/' . $course_id . '/assessments');
         $response = $api->getResponse();
         foreach ($response->data as $assessment) {

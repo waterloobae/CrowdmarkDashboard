@@ -9,6 +9,7 @@ class API
     protected string $url = 'https://app.crowdmark.com/';
     protected string $api_key_string;
 
+    protected string $logger;
     // $this->exec uses and returns
     protected object $api_response;
     // $this->multExec uses and returns
@@ -19,10 +20,11 @@ class API
 
     protected int $httpCode;
 
-    public function __construct() 
+    public function __construct( object $logger )    
     {
         // constructor
         $this->buildApiKeyString();
+        $this->logger = $logger;
     }
 
     public function buildApiKeyString()

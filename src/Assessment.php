@@ -10,6 +10,7 @@ use Waterloobae\CrowdmarkDashboard\Grader;
 use Exception;
 
 class Assessment{
+    protected object $logger;
     protected string $course_id;
     protected string $course_name;
 
@@ -32,12 +33,13 @@ class Assessment{
 
     protected object $response;
 
-    public function __construct(string $assessment_id)
+    public function __construct(string $assessment_id, object $logger)
     {
         $this->assessment_id = $assessment_id;
+        $this->logger = $logger;
 
         $this->end_point = 'api/assessments/' . $assessment_id;
-        $api = new API();
+        $api = new API( $this->logger );
         $api->exec($this->end_point);
         $this->response = $api->getResponse();
 
@@ -66,11 +68,11 @@ class Assessment{
 
     public function setQuestions($assessment_id)
     {
-         $api = new API();
+         $api = new API( $this->logger );
          $api->exec('api/assessments/' . $assessment_id . '/questions');
          $response = $api->getResponse();
          foreach ($response->data as $question) {
-             $this->questions[] = new Question($assessment_id, $question);
+             $this->questions[] = new Question($assessment_id, $question, $this->logger);
          }
     }
 
@@ -79,7 +81,7 @@ class Assessment{
         $self_link = 'api/assessments/' . $assessment_id . '/booklets';
 
         do {
-            $api = new API();
+            $api = new API( $this->logger );
             $api->exec($self_link);
             $response = $api->getResponse();
             // echo "==== Booklet Debug ====<br>";
@@ -88,7 +90,7 @@ class Assessment{
             // echo("</pre>");
 
             foreach ($response->data as $booklet) {
-                $this->booklets[] = new Booklet($this->assessment_id, $booklet);
+                $this->booklets[] = new Booklet($this->assessment_id, $booklet, $this->logger);
             }
             $self_link = $response->links->next ?? "end";
         } while ( $self_link != "end");
@@ -102,7 +104,7 @@ class Assessment{
             $end_points[] = 'api/booklets/' . $booklet->getBookletId() . '/responses';
         }
 
-        $api = new API();
+        $api = new API( $this->logger );
         $api->multiExec($end_points);
         $api_responses = $api->getResponses();
 
@@ -114,7 +116,7 @@ class Assessment{
             // echo("</pre>");
 
             foreach ($api_response->data as $data) {
-                $temp_responses[] = new Response($this->assessment_id, $data, $api_response->included);
+                $temp_responses[] = new Response($this->assessment_id, $data, $api_response->included, $this->logger);
             }
 
             if (!empty($temp_responses)) {
@@ -126,7 +128,7 @@ class Assessment{
                     if ($data->type == "user" && !in_array($data->id, $dup_grader_ids)){ 
                         // echo($data->attributes->email."<br>");
                         $dup_grader_ids[] = $data->id;
-                        $this->graders[] = new Grader($data);
+                        $this->graders[] = new Grader($data, $this->logger);
                     }
                 }
             }
@@ -140,7 +142,7 @@ class Assessment{
             $end_points[] = 'api/booklets/' . $booklet->getBookletId() . '/pages';
         }
 
-        $api = new API();
+        $api = new API( $this->logger );
         $api->multiExec($end_points);
         $api_responses = $api->getResponses();
 
@@ -151,7 +153,7 @@ class Assessment{
             foreach ($api_response->data as $data) {
                 if($data->type == "page"){
                 //if($data->type == "page" && $data->attributes->number == 1){
-                    $temp_pages[] = new Page($this->assessment_id, $booklet_id, $data);
+                    $temp_pages[] = new Page($this->assessment_id, $booklet_id, $data, $this->logger);
                 }
             }
 
@@ -173,7 +175,7 @@ class Assessment{
         foreach($this->questions as $question){
             $end_point = 'api/questions/' . $question->getQuestionId() . '/responses';
 
-            $api = new API();
+            $api = new API( $this->logger );
 
             try {
                 $api->exec($end_point);
@@ -256,7 +258,7 @@ class Assessment{
             }
         }        
 
-        $api = new API();
+        $api = new API( $this->logger );
         $api->multiExec($end_points);
         $responses = $api->getResponses();
         
@@ -288,7 +290,7 @@ class Assessment{
            }
        }        
 
-       $api = new API();
+       $api = new API( $this->logger );
        $api->multiExec($end_points);
        $responses = $api->getResponses();
        

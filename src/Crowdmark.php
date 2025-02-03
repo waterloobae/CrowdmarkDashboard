@@ -10,21 +10,23 @@ use setasign\Fpdi\Fpdi;
 
 class Crowdmark
 {
+    protected object $logger;
     protected array $courses = [];
     protected array $course_ids = [];
     protected array $assessment_ids = [];
 
     protected object $api_response;
 
-    public function __construct()
+    public function __construct(object $logger)
     {
         // constructor
-        $api = new API();
+        $this->logger = $logger;
+        $api = new API( $this->logger );
         $api->exec('api/courses');
         $this->api_response = $api->getResponse();
         $course_data = array();
         foreach ($this->api_response->data as $course_data) {
-            $this->courses[] = new Course($course_data->id);
+            $this->courses[] = new Course($course_data->id, $this->logger);
             $this->course_ids[] = $course_data->id;
         }
         $this->setAssessmentIDs();
@@ -115,7 +117,7 @@ class Crowdmark
     {
         $assessments = [];
         foreach($assessment_ids as $assessment_id) {
-            $temp = new Assessment($assessment_id);
+            $temp = new Assessment($assessment_id, $this->logger);
             $temp->setResponses($temp->getBooklets());
             $assessments[] = $temp;
         }   
@@ -151,7 +153,7 @@ class Crowdmark
     public function generateUploadedMatchedCounts(array $assessment_ids){
         $assessments = [];
         foreach($assessment_ids as $assessment_id) {
-            $temp = new Assessment($assessment_id);
+            $temp = new Assessment($assessment_id, $this->logger);
             $temp->setUploadedAndMatchedCounts();
             $assessments[] = $temp;
         }   
@@ -184,7 +186,7 @@ class Crowdmark
     {
         $graded_counts = [];
         foreach($assessment_ids as $assessment_id) {
-            $temp = new Assessment($assessment_id);
+            $temp = new Assessment($assessment_id, $this->logger);
             $graded_counts['course'] = $temp->getCourseName();
             $courseName = $graded_counts['course'];
             $temp->setUploadedAndMatchedCounts();
@@ -238,7 +240,7 @@ class Crowdmark
 
     public function generateGradersGradingList(array $assessment_ids){
         foreach($assessment_ids as $assessment_id) {
-            $temp = new Assessment($assessment_id);
+            $temp = new Assessment($assessment_id, $this->logger);
             $temp->setResponses($temp->getBooklets());
             $assessments[] = $temp;
         }   
@@ -321,7 +323,7 @@ class Crowdmark
         $email_list = [];
 
         foreach($assessment_ids as $assessment_id) {
-            $temp = new Assessment($assessment_id);
+            $temp = new Assessment($assessment_id, $this->logger);
             $temp->setMatchedEmailList();
             $email_list = array_merge($email_list, $temp->getMatchedEmailList());
         }   
@@ -338,7 +340,7 @@ class Crowdmark
         $student_list[] = "Email, First Name, Last Name, Participant ID";
 
         foreach($assessment_ids as $assessment_id) {
-            $temp = new Assessment($assessment_id);
+            $temp = new Assessment($assessment_id, $this->logger);
             $temp->setStdentCSVList();
             $student_list = array_merge($student_list, $temp->getStudentCSVList());
         }   
@@ -354,7 +356,7 @@ class Crowdmark
     {
         $assessments = [];
         foreach($assessment_ids as $assessment_id) {
-            $temp = new Assessment($assessment_id);
+            $temp = new Assessment($assessment_id, $this->logger);
             $temp->setAssessmentPages($temp->getBooklets());
             $assessments[] = $temp;
 

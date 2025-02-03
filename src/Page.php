@@ -3,6 +3,7 @@
 namespace Waterloobae\CrowdmarkDashboard;
 
 class Page{
+    protected object $logger;
     protected string $assessment_id;
     protected string $booklet_id;
     protected array $response_ids = [];
@@ -10,8 +11,9 @@ class Page{
     protected string $page_url;
     protected string $page_number;
  
-    public function __construct(string $assessment_id,string $booklet_id, object $page)
+    public function __construct(string $assessment_id,string $booklet_id, object $page, object $logger)
     {
+        $this->logger = $logger;
         $this->assessment_id = $assessment_id;
         $this->booklet_id = $booklet_id;
         foreach($page->relationships->responses->data as $response){
