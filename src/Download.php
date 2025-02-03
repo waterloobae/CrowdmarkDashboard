@@ -4,77 +4,87 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once __DIR__ . '/../vendor/autoload.php';
-use Waterloobae\CrowdmarkDashboard\Crowdmark;
+use Waterloobae\CrowdmarkDashboard\Dashboard;
 
 class Download{
-    private object $logger;
-    private object $crowdmark;
+    private object $dashboard;
     private array $course_names = [];
     private array $assessment_ids = [];
     private string $page_number = "NA";
+    private string $link_type = "NA";
 
-    public function __construct( object $logger ){
+    public function __construct(){
         // constructor
-        $this->logger = $logger;
-        $this->crowdmark = new Crowdmark( $this->logger );
+        $this->dashboard = new Dashboard();
+    }
+
+    public function setParams(){
         $this->course_names = explode("~",$_GET['course_name']);
-        $this->page_number = $_GET['page_number'];
-        $this->assessment_ids = $this->crowdmark->returnAssessmentIDs($this->course_names);
+        $this->page_number = $_GET['page_number'];    
+        $this->link_type = $_GET['type'];
+        $this->assessment_ids = $this->dashboard->getCrowdmark()->returnAssessmentIDs($this->course_names);
     }
 
     public function downloadPage() {
-        $this->crowdmark->downloadPagesByPageNumber($this->assessment_ids, $this->page_number);
+        $this->dashboard->getCrowdmark()->downloadPagesByPageNumber($this->assessment_ids, $this->page_number);
     }
 
     public function generateStudentInfo() {
-        $this->crowdmark->generateStudentInformation($this->assessment_ids);
+        $this->dashboard->getCrowdmark()->generateStudentInformation($this->assessment_ids);
     }
 
     public function generateStudentEmailList() {
-        $this->crowdmark->generateStudentEmailList($this->assessment_ids);
+        $this->dashboard->getCrowdmark()->generateStudentEmailList($this->assessment_ids);
     }
 
     public function generateGradersGradingList(){
-        $this->crowdmark->generateGradersGradingList($this->assessment_ids);
+        $this->dashboard->getCrowdmark()->generateGradersGradingList($this->assessment_ids);
     }
 
     public function generateGradingStatus(){
-        $this->crowdmark->generateGradingStatus($this->assessment_ids);
+        $this->dashboard->getCrowdmark()->generateGradingStatus($this->assessment_ids);
     }
 
     public function generateUploadedMatchedCounts(){
-        $this->crowdmark->generateUploadedMatchedCounts($this->assessment_ids);
+        $this->dashboard->getCrowdmark()->generateUploadedMatchedCounts($this->assessment_ids);
     }
 
     public function generateIntegrityCheckReport(){
-        $this->crowdmark->generateIntegrityCheckReport($this->assessment_ids);
+        $this->dashboard->getCrowdmark()->generateIntegrityCheckReport($this->assessment_ids);
+    }
+
+    public function createLink(){
+
+        switch($this->link_type){
+            case "page":
+                $this->downloadPage();
+                break;
+            case "studentinfo":
+                $this->generateStudentInfo();
+                break;
+            case "studentemaillist":
+                $this->generateStudentEmailList();
+                break;
+            case "grader": 
+                $this->generateGradersGradingList();
+                break;
+            case "grading":
+                $this->generateGradingStatus();
+                break;
+            case "uploadedmatched":
+                $this->generateUploadedMatchedCounts();
+                break;
+            case "integritycheck":
+                $this->generateIntegrityCheckReport();
+                break;
+        }
+        
+
     }
 
 }
 
-$dashboard = new Dashboard();
+$dwonload = new Download();
+$dwonload->setParams();
+$dwonload->createLink();
 
-switch($_GET['type']){
-    case "page":
-        $dashboard->getDownload()->downloadPage();
-        break;
-    case "studentinfo":
-        $dashboard->getDownload()->generateStudentInfo();
-        break;
-    case "studentemaillist":
-        $dashboard->getDownload()->generateStudentEmailList();
-        break;
-    case "grader": 
-        $dashboard->getDownload()->generateGradersGradingList();
-        break;
-    case "grading":
-        $dashboard->getDownload()->generateGradingStatus();
-        break;
-    case "uploadedmatched":
-        $dashboard->getDownload()->generateUploadedMatchedCounts();
-        break;
-    case "integritycheck":
-        $dashboard->getDownload()->generateIntegrityCheckReport();
-        break;
-
-}

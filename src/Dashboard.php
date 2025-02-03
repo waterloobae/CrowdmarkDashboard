@@ -9,23 +9,17 @@ if (session_status() === PHP_SESSION_NONE) {
 class Dashboard{
     private object $logger;
     private object $crowdmark;
-    private object $download;
 
     public function __construct(){
         // constructor
         $this->logger = new Logger();
         $this->crowdmark = new Crowdmark( $this->logger );
-        $this->download = new Download( $this->logger );
     }
 
     public function getCrowdmark(){
         return $this->crowdmark;
     }
 
-    public function getDownload(){
-        return $this->download;
-    }
-    
     // Validations
     // 1. API_KEY.php exists
     // 2. $api_key is set

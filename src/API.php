@@ -9,7 +9,7 @@ class API
     protected string $url = 'https://app.crowdmark.com/';
     protected string $api_key_string;
 
-    protected string $logger;
+    protected object $logger;
     // $this->exec uses and returns
     protected object $api_response;
     // $this->multExec uses and returns

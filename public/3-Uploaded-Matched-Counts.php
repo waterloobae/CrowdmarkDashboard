@@ -1,7 +1,7 @@
 <?php
 namespace Waterloobae\CrowdmarkDashboard;
 require_once __DIR__ . '/../vendor/autoload.php';
-use Waterloobae\CrowdmarkDashboard\Crowdmark;
+use Waterloobae\CrowdmarkDashboard\Dashboard;
 
 $dashboard = new Dashboard();
 
