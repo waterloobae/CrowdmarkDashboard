@@ -23,20 +23,30 @@ class API
     public function __construct( object $logger )    
     {
         // constructor
-        $this->buildApiKeyString();
         $this->logger = $logger;
+        $this->buildApiKeyString();
+
     }
 
     public function buildApiKeyString()
     {
-        //require_once '../config/API_KEY.php';
-        require __DIR__ . '/../config/API_KEY.php';
+        $apiKeyFile = __DIR__ . '/../config/API_KEY.php';
+        if (!file_exists($apiKeyFile)) {
+            $this->logger->echoMessage("error", "API key file does not exist, " . $apiKeyFile .". Please create one by copying API_KEY_Example.php to API_KEY.php.");
+        }
+
+        require $apiKeyFile;
+
+        if (!isset($api_key)) {
+            $this->logger->echoMessage("error", "API key is not set correctly in ". $apiKeyFile . ". Please set the API key, \$api_key, in the API_KEY.php file.");
+        }
+
         $this->api_key_string = 'api_key=' . $api_key;
     }
 
-
     public function exec(string $end_point){
-
+        //Status Message
+        //$this->logger->echoMessage("info", "API call to " . $end_point . " started.");
         $curl = curl_init();
         // Does end_point have a ? in it?
         if (strpos($end_point, '?') !== false) {
@@ -44,9 +54,6 @@ class API
         } else {
            curl_setopt($curl, CURLOPT_URL, $this->url . $end_point . '?' . $this->api_key_string);
         }
-  
-       //echo("Run Time:" . date("Y-m-d H:i:s") . "<br>");
-       //echo "URL: " . $this->url . $end_point . '?' . $this->api_key_string . "<br>";
 
        curl_setopt($curl, CURLOPT_TIMEOUT, 6000);
        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -95,6 +102,8 @@ class API
 
             // Loop through each URL and create a cURL handle for it
             foreach ($end_points as $end_point) {
+                //Status Message                
+                //$this->logger->echoMessage("info", "API call to " . $end_point . " started.");
                 $ch = curl_init();
                 if (strpos($end_point, '?') !== false) {
                     curl_setopt($ch, CURLOPT_URL, $this->url . $end_point . '&' . $this->api_key_string);
