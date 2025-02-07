@@ -32,13 +32,13 @@ class API
     {
         $apiKeyFile = __DIR__ . '/../config/API_KEY.php';
         if (!file_exists($apiKeyFile)) {
-            $this->logger->echoMessage("error", "API key file does not exist, " . $apiKeyFile .". Please create one by copying API_KEY_Example.php to API_KEY.php.");
+            die("error: API key file does not exist, " . $apiKeyFile .". Please create one by copying API_KEY_Example.php to API_KEY.php.");
         }
 
         require $apiKeyFile;
 
         if (!isset($api_key)) {
-            $this->logger->echoMessage("error", "API key is not set correctly in ". $apiKeyFile . ". Please set the API key, \$api_key, in the API_KEY.php file.");
+            die("error: API key is not set correctly in ". $apiKeyFile . ". Please set the API key, \$api_key, in the API_KEY.php file.");
         }
 
         $this->api_key_string = 'api_key=' . $api_key;
@@ -46,6 +46,7 @@ class API
 
     public function exec(string $end_point){
         //Status Message
+        $this->logger->setInfo("API call to " . $end_point . " started.");
         //$this->logger->echoMessage("info", "API call to " . $end_point . " started.");
         $curl = curl_init();
         // Does end_point have a ? in it?
@@ -102,7 +103,8 @@ class API
 
             // Loop through each URL and create a cURL handle for it
             foreach ($end_points as $end_point) {
-                //Status Message                
+                //Status Message
+                $this->logger->setInfo("API call to " . $end_point . " started.");                
                 //$this->logger->echoMessage("info", "API call to " . $end_point . " started.");
                 $ch = curl_init();
                 if (strpos($end_point, '?') !== false) {

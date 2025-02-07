@@ -20,7 +20,7 @@ $dashboard = new Dashboard();
 $start_time = "Start Time:" . date("Y-m-d H:i:s") . "<br>";
 echo($start_time);
 
-$dashboard->getLogger()->echoLoggerDiv();
+$dashboard->echoLoggerMessage();
 //$dashboard->getCrowdmark()->createDownloadLinks('page', ['CIMC 2024 French','Course A', 'CSMC 2024 French'], '2');
 $dashboard->getCrowdmark()->createDownloadLinks('page', ['2025 TerryB Test','Course A', 'CSMC 2024 French'], '2');
 
