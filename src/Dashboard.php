@@ -12,11 +12,13 @@ if (session_status() === PHP_SESSION_NONE) {
 class Dashboard{
     private object $logger;
     private object $crowdmark;
+    private object $engine;
     private static $logDiv = '<div id="crowdmarkdashboard_logger" style="position: relative; background-color: #f1f1f1; border: 1px solid #d3d3d3; padding: 10px; z-index: 1000; overflow: auto; max-height: 200px; width: 80%;"></div>';    
 
     public function __construct(){
         // constructor
         $this->logger = new Logger();
+        $this->engine = new Engine();
         $this->crowdmark = new Crowdmark( $this->logger );
     }
 
@@ -29,7 +31,7 @@ class Dashboard{
     }
 
     public function echoLoggerMessage() {
-        $relativePath = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
+        $webRootPath = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
         echo "<script data-status='logger'>
             var logger = document.getElementById('crowdmarkdashboard_logger');
             if (!logger) {
@@ -38,7 +40,7 @@ class Dashboard{
             }
 
             function updateLoggerMessage() {
-                fetch('".$relativePath."/LoggerMessage.php')
+                fetch('".$webRootPath."/LoggerMessage.php')
                     .then(response => response.json()) // Convert response to JSON
                     .then(data => {
                         let error = data.error_msg;

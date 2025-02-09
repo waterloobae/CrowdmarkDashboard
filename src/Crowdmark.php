@@ -53,7 +53,7 @@ class Crowdmark
     public function createDownloadLinks(string $type, array $course_names, string $page_number = null)
     {
         $valid_encoded_course_names = [];
-        $relativePath = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
+        $webRootPath = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
         
         switch($type) {
             case "page":
@@ -90,7 +90,7 @@ class Crowdmark
             }
             $encoded_course_name = urlencode($course_name);
             
-            $download_link = $relativePath."/Download.php?type=" . $type . "&course_name=" . $encoded_course_name. "&page_number=" . $page_number;
+            $download_link = $webRootPath."/Download.php?type=" . $type . "&course_name=" . $encoded_course_name. "&page_number=" . $page_number;
             if($is_valid) {
                 $valid_encoded_course_names[] = $encoded_course_name;    
                 echo '<a href="' . $download_link . '" download onclick="this.innerText=\'Loading '.$course_name.'. Please wait!\'; this.style.pointerEvents = \'none\';">Download (' . $course_name . ')</a><br>';
@@ -103,7 +103,7 @@ class Crowdmark
         if(empty($valid_encoded_course_names)) {
             echo "No valid course names found.";
         }else{
-            $download_link = $relativePath."/Download.php?type=" . $type . "&course_name=" . implode("~", $valid_encoded_course_names). "&page_number=" . $page_number;
+            $download_link = $webRootPath."/Download.php?type=" . $type . "&course_name=" . implode("~", $valid_encoded_course_names). "&page_number=" . $page_number;
             echo '<a href="' . $download_link . '" download onclick="this.innerText=\'Loading All Courses. Please wait!\'; this.style.pointerEvents = \'none\';">Download All Course</a><br>';
         }
         echo("<br>");

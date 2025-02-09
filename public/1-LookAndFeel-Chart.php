@@ -1,9 +1,15 @@
 <?php
 namespace Waterloobae\CrowdmarkDashboard;
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+} elseif (session_status() !== PHP_SESSION_ACTIVE) {
+  session_destroy();
+  session_start();
+}
 require_once __DIR__ . '/../vendor/autoload.php';
 //include_once '../src/Course.php';
-use Waterloobae\CrowdmarkDashboard\Course;
-
+use Waterloobae\CrowdmarkDashboard\Dashboard;
+use Waterloobae\CrowdmarkDashboard\Engine;
 
 $chart1 = <<<CHARTONE
 <script>
