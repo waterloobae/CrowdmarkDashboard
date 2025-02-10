@@ -13,13 +13,14 @@ class Dashboard{
     private object $logger;
     private object $crowdmark;
     private object $engine;
-    private static $logDiv = '<div id="crowdmarkdashboard_logger" style="position: relative; background-color: #f1f1f1; border: 1px solid #d3d3d3; padding: 10px; z-index: 1000; overflow: auto; max-height: 200px; width: 80%;"></div>';    
+    private static $logDiv = "";    
 
     public function __construct(){
         // constructor
         $this->logger = new Logger();
         $this->engine = new Engine();
         $this->crowdmark = new Crowdmark( $this->logger );
+        self::$logDiv = $this->engine->render('logger_div');
     }
 
     public function getLogDiv() {
@@ -32,41 +33,7 @@ class Dashboard{
 
     public function echoLoggerMessage() {
         $webRootPath = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
-        echo "<script data-status='logger'>
-            var logger = document.getElementById('crowdmarkdashboard_logger');
-            if (!logger) {
-                document.write('".$this->getLogDiv()."');
-                var logger = document.getElementById('crowdmarkdashboard_logger');
-            }
-
-            function updateLoggerMessage() {
-                fetch('".$webRootPath."/LoggerMessage.php')
-                    .then(response => response.json()) // Convert response to JSON
-                    .then(data => {
-                        let error = data.error_msg;
-                        let warning = data.warning_msg;
-                        let info = data.info_msg;
-
-                        if (error !== 'NA') {
-                            logger.innerHTML = '<div style=\"color: red;\">Error: ' + error + '</div>';
-                        }
-                        if (warning !== 'NA') {
-                            logger.innerHTML = '<div style=\"color: orange;\">Warning: ' + warning + '</div>';
-                        }
-                        if (info !== 'NA') {
-                            logger.innerHTML = '<div style=\"color: blue;\">Info: ' + info + '</div>';
-                        }
-
-                    })
-                    .catch(error => {
-                        console.error('Error fetching logger:', error);
-                        logger.innerHTML = '<div style=\"color: red;\">Error fetching logger.</div>';
-                    });
-            }
-
-            // Run `updateLoggerMessage` every second
-            let updateLoggerMessageInterval = setInterval(updateLoggerMessage, 1000);
-            </script>";
+        echo $this->engine->render('logger_script', ['_LoggerDiv' => self::$logDiv, '_WebRootPath' => $webRootPath]);
     }
 
     public function getCrowdmark(){
