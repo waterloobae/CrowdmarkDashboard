@@ -13,7 +13,8 @@ class Dashboard{
     private object $logger;
     private object $crowdmark;
     private object $engine;
-    private static $logDiv = "";    
+    private static $logDiv = "";
+    private static $head = "";    
 
     public function __construct(){
         // constructor
@@ -21,6 +22,8 @@ class Dashboard{
         $this->engine = new Engine();
         $this->crowdmark = new Crowdmark( $this->logger );
         self::$logDiv = $this->engine->render('logger_div');
+        self::$head = $this->engine->render('head');
+
     }
 
     public function getLogDiv() {
@@ -36,6 +39,10 @@ class Dashboard{
         echo $this->engine->render('logger_script', ['_LoggerDiv' => self::$logDiv, '_WebRootPath' => $webRootPath]);
     }
 
+    public function insertHead() {
+        echo $this->engine->render('head_script', ['_Head' => self::$head]);
+    }
+
     public function getCrowdmark(){
         return $this->crowdmark;
     }
@@ -45,6 +52,9 @@ class Dashboard{
     // 2. $api_key is set
     // 3. API returns 200 response
 
+    public function getEngine(){
+        return $this->engine;
+    }
 
     public function getLogger(){
         return $this->logger;

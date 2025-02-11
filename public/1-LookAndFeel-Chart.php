@@ -10,6 +10,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 //include_once '../src/Course.php';
 use Waterloobae\CrowdmarkDashboard\Dashboard;
 use Waterloobae\CrowdmarkDashboard\Engine;
+$dashboard = new Dashboard();
+$csrf = $dashboard->getEngine()->render('csrf_in_form');
 
 $chart1 = <<<CHARTONE
 <script>
@@ -130,36 +132,9 @@ CARD;
 
 
 $html = <<<HTML
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Chart</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <script type="importmap">
-      {
-        "imports": {
-          "@material/web/": "https://esm.run/@material/web/"
-        }
-      }
-    </script>
-    <script type="module">
-      import '@material/web/all.js';
-      import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
-  
-      document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
-    </script>    
-    <style>
-        @import url('../src/css/light.css');
-        @import url('../src/css/dashboard.css');
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../src/js/ajax.js"></script>
-
 </head>
 <body>
-<form id="myForm">
+<form id="crowdmarkDashboardFrom">
     <input type="text" id="name" name="name" value="John Doe">
     <md-filter-chip label="2024 Euclid A" \>
     </md-filter-chip>
@@ -168,53 +143,7 @@ $html = <<<HTML
     <input type="hidden" id="csrf_token" name="csrf_token" value="ABC123">
     <p id="response"></p>
     <button>Get Data from Server</button>
-    <script>
-        // Fetch CSRF token on page load
-        fetch('../src/AjaxHandler.php?csrf=true')
-          .then(response => response.json())
-          .then(data => {
-              document.getElementById('csrf_token').value = data.csrf_token;
-          });
-        document.getElementById('myForm').addEventListener('submit', function (event) {
-          createHiddenControl();
-          sendAjaxRequest(event, 'sayHello', 'myForm');
-          deleteHiddenControl()
-        });
-
-        function createHiddenControl() {
-          const form = document.getElementById("myForm");
-          const chips = document.querySelectorAll("md-filter-chip");
-          const selectedChips = [];
-
-          chips.forEach(chip => {
-              const chipValue = chip.getAttribute("label");
-              //alert(chip.selected);              
-              //alert(chip.getAttribute("selected"));
-              const isSelected = chip.selected;
-          
-              if (isSelected) {
-                  // Add selected chip to the array
-                  selectedChips.push(chipValue);
-              }
-          }); // Added missing parenthesis
-        
-          const hiddenControl = document.createElement('input');
-          hiddenControl.type = 'hidden';
-          hiddenControl.name = 'selectedChips';
-          hiddenControl.value = JSON.stringify(selectedChips);  // Post as JSON array
-          alert(hiddenControl.value);
-          form.appendChild(hiddenControl);
-        }
-        
-        function deleteHiddenControl() {
-          const form = document.getElementById("myForm");
-          const hiddenControl = form.querySelector('input[name="selectedChips"]');
-          if (hiddenControl) {
-              form.removeChild(hiddenControl);
-          }
-        }
-    
-    </script>
+    $csrf
 </form>
 <hr>
 <div class="canvas-container">
@@ -239,9 +168,20 @@ $checkbox
 $button
 $card
 </form>
-</body>
-</html>
 HTML;
 
-echo $html;
+//echo $dashboard->insertHead();
+
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Crowdmark Dashboard</title>
+    <?php
+      // echo $dashboard->getEngine()->render('head');
+      echo $html;
+      $dashboard->insertHead();
+    ?>
+</body>
+</html>
