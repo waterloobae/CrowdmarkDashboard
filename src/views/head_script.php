@@ -43,6 +43,4 @@
         type: 'module',
         content: "import '@material/web/all.js'; import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js'; document.adoptedStyleSheets.push(typescaleStyles.styleSheet);"
     });
-    insertScriptBeforeHead({ src: 'https://cdn.jsdelivr.net/npm/chart.js' });
-    insertScriptBeforeHead({ src: '../src/js/ajax.js' });
 </script>

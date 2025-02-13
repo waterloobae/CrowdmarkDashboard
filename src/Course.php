@@ -42,7 +42,7 @@ class Course{
         $api->exec('api/courses/' . $course_id . '/assessments');
         $response = $api->getResponse();
         foreach ($response->data as $assessment) {
-            $this->assessments[] = new Assessment($assessment->id);
+            $this->assessments[] = new Assessment($assessment->id, $this->logger);
         }
      }
 

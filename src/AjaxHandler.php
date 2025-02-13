@@ -7,27 +7,62 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Waterloobae\CrowdmarkDashboard\Crowdmark;
+
 class AjaxHandler {
     private $actions;
-
+    private object $crowdmark;
+    private object $logger;
     // handling closures
     //
     public function __construct() {
         $this->actions = [
             'sayHello' => function($params) {
-                return json_encode("Hello, $params!");
+                return "<h2>Hello There!</h2>".$params;
                 //return "Hello, " . $params;
                 //return "Hello, ";
             },
-            'addNumbers' => function($a, $b) {
-                return $a + $b;
+            'page_1' => function($params) {
+                $this->crowdmark = new Crowdmark();
+                $params = is_array($params) ? $params : json_decode($params, true);
+                $output = $this->crowdmark->createDownloadLinks('page', $params, '1');
+                return $output;
+                //return json_encode($output);
             },
+            'page_2' => function($params) {
+                $this->crowdmark = new Crowdmark();
+                $params = is_array($params) ? $params : json_decode($params, true);
+                $output = $this->crowdmark->createDownloadLinks('page', $params);
+                return $output;
+                //return json_encode($output);
+            },
+            'studentinfo' => $this->createClosure('studentinfo'),
+            'studentemaillist' => $this->createClosure('studentemaillist'),
+            'grader' => $this->createClosure('grader'),
+            'grading' => $this->createClosure('grading'),
+            'uploadedmatched' => $this->createClosure('uploadedmatched'),
+            'integritycheck' => $this->createClosure('integritycheck'),
             // Add more closures as needed
         ];
     }
 
+    private function createClosure($action) {
+        return function($params) use ($action) {
+            $this->crowdmark = new Crowdmark();
+            $params = is_array($params) ? $params : json_decode($params, true);
+            $output = $this->crowdmark->createDownloadLinks($action, $params);
+            return $output;
+            //return json_encode($output);
+        };
+    }
+
     public function handleRequest($actionName, $params) {
         if (isset($this->actions[$actionName])) {
+            if($this->actions[$actionName] == 'page_1' || $this->actions[$actionName] == 'page_2') {
+                return call_user_func_array('page', $params);
+            }
             return call_user_func_array($this->actions[$actionName], $params);
         } else {
             return "Invalid action!";
@@ -56,7 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if(!$ajaxHandler::validateCSRFToken($csrfToken)) {
         $response = array("status" => "error", "message" => "Invalid CSRF token.");
     } else {
-        $params = isset($_POST['name']) ? $_POST['name'] : [];
+        $params = isset($_POST['selectedChips']) ? $_POST['selectedChips'] : [];        
+        // $params = isset($_POST['name']) ? $_POST['name'] : [];
         // $params = isset($_POST) ? $_POST : [];
         // $params = isset($_POST['params']) ? $_POST['params'] : [];
         $response = $ajaxHandler->handleRequest($action, [$params]);

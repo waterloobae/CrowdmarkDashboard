@@ -8,8 +8,9 @@ class Engine
         $path = __DIR__ . '/views/' . $viewsName . '.php';
         $contents = file_get_contents($path);
         foreach ($data as $key => $value) {
+
             $contents = str_replace(
-                '{'.$key.'}', $value, $contents
+                '{'.$key.'}', (string)$value, $contents
             );
 }
         return $contents;

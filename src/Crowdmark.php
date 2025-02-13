@@ -4,7 +4,7 @@ namespace Waterloobae\CrowdmarkDashboard;
 use Waterloobae\CrowdmarkDashboard\API;
 use Waterloobae\CrowdmarkDashboard\Course;
 use Waterloobae\CrowdmarkDashboard\Assessment;
-use Waterloobae\CrowdmarkDashboard\Page;
+use Waterloobae\CrowdmarkDashboard\Logger;
 
 use setasign\Fpdi\Fpdi;
 
@@ -17,10 +17,10 @@ class Crowdmark
 
     protected object $api_response;
 
-    public function __construct(object $logger)
+    public function __construct()
     {
         // constructor
-        $this->logger = $logger;
+        $this->logger = new Logger();
         $api = new API( $this->logger );
         $api->exec('api/courses');
         $this->api_response = $api->getResponse();
@@ -57,25 +57,25 @@ class Crowdmark
         
         switch($type) {
             case "page":
-                echo "<h2>Download Booklet Pages</h2>";
+                echo "<h2>3. Download Booklet Pages</h2>";
                 break;
             case "studentinfo":
-                echo "<h2>Download Student Information</h2>";
+                echo "<h2>3. Download Student Information</h2>";
                 break;
             case "studentemaillist":
-                echo "<h2>Download Student Email List</h2>";
+                echo "<h2>3. Download Student Email List</h2>";
                 break;
             case "grader":
-                echo "<h2>Download Grader's Grading List</h2>";
+                echo "<h2>3. Download Grader's Grading List</h2>";
                 break;
             case "grading":
-                echo "<h2>Download Grading Status</h2>";
+                echo "<h2>3. Download Grading Status</h2>";
                 break;
             case "uploadedmatched":
-                echo "<h2>Download Uploaded and Matched Counts</h2>";
+                echo "<h2>3. Download Uploaded and Matched Counts</h2>";
                 break;
             case "integritycheck":
-                echo "<h2>Download Integrity Check Report</h2>";
+                echo "<h2>3. Download Integrity Check Report</h2>";
                 break;
         }
         
@@ -101,12 +101,11 @@ class Crowdmark
 
         echo("<br>");
         if(empty($valid_encoded_course_names)) {
-            echo "No valid course names found.";
+            echo "No valid course names found.<br>";
         }else{
             $download_link = $webRootPath."/Download.php?type=" . $type . "&course_name=" . implode("~", $valid_encoded_course_names). "&page_number=" . $page_number;
-            echo '<a href="' . $download_link . '" download onclick="this.innerText=\'Loading All Courses. Please wait!\'; this.style.pointerEvents = \'none\';">Download All Course</a><br>';
+            echo '<a href="' . $download_link . '" download onclick="this.innerText=\'Loading All Courses. Please wait!\'; this.style.pointerEvents = \'none\';">Download All Course</a><br><br>';
         }
-        echo("<br>");
     }
 
     //=================================
