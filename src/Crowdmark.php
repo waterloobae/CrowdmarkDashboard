@@ -55,6 +55,7 @@ class Crowdmark
         $valid_encoded_course_names = [];
         $webRootPath = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
         
+        ob_start();
         switch($type) {
             case "page":
                 echo "<h2>3. Download Booklet Pages</h2>";
@@ -97,6 +98,7 @@ class Crowdmark
             } else {
                 echo "Invalid course name: " . $course_name . "<br>";
             }
+
         }
 
         echo("<br>");
@@ -106,6 +108,8 @@ class Crowdmark
             $download_link = $webRootPath."/Download.php?type=" . $type . "&course_name=" . implode("~", $valid_encoded_course_names). "&page_number=" . $page_number;
             echo '<a href="' . $download_link . '" download onclick="this.innerText=\'Loading All Courses. Please wait!\'; this.style.pointerEvents = \'none\';">Download All Course</a><br><br>';
         }
+        $output = ob_get_clean();
+        echo $output;
     }
 
     //=================================

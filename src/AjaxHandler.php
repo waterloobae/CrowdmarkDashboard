@@ -92,14 +92,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response = array("status" => "error", "message" => "Invalid CSRF token.");
     } else {
         $params = isset($_POST['selectedChips']) ? $_POST['selectedChips'] : [];        
-        // $params = isset($_POST['name']) ? $_POST['name'] : [];
-        // $params = isset($_POST) ? $_POST : [];
-        // $params = isset($_POST['params']) ? $_POST['params'] : [];
         $response = $ajaxHandler->handleRequest($action, [$params]);
         echo json_encode($response);
     }
-    //header('Content-Type: application/json');
-    //echo json_encode($response);
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['csrf'])) {
     echo json_encode(array("csrf_token" => AjaxHandler::generateCSRFToken()));
 }

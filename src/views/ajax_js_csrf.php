@@ -71,6 +71,12 @@ function sendAjaxRequest(event, formId) {
               response = xhr.responseText;
             }
 
+            if (response === null) {
+            response = '';
+            } else if (typeof response === 'string' && response.endsWith('null')) {
+            response = response.slice(0, -4);
+            }
+
           if (response.status === 'success') {
               //document.getElementById('response').innerText = response.data;
               document.getElementById('crowdmarkDashboard_response').innerHTML = response;                
