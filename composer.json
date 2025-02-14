@@ -2,6 +2,7 @@
     "name": "waterloobae/drowdmarkdashboard",
     "description": "A dashboard for crowdmark",
     "version": "1.00.0",
+    "license": "MIT",
     "require": {
         "setasign/fpdf": "^1.8",
         "setasign/fpdi": "^2.3"
