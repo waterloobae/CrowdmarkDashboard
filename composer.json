@@ -1,7 +1,7 @@
 {
-    "name": "waterloobae/drowdmark-dashboard",
+    "name": "waterloobae/drowdmarkdashboard",
     "description": "A dashboard for crowdmark",
-    "version": "0.1.0",
+    "version": "1.00.0",
     "require": {
         "setasign/fpdf": "^1.8",
         "setasign/fpdi": "^2.3"
