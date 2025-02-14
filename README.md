@@ -2,7 +2,7 @@
 
 ## Instructions for Composer Package
 Install this package
-`composer require waterloobae/CrowdmarkDashboard`
+`composer require waterloobae/crowdmarkdashboard`
 
 Copy /config/API_KEY_Example.php file as API_KEY.php.
 Then assign your Crowdmark API key to '$api_key` value.
