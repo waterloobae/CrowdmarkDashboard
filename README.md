@@ -4,8 +4,14 @@
 Install this package
 `composer require waterloobae/CrowdmarkDashboard`
 
-Copy /config/API_KEY_Example.php file as API_KEY.php
+Copy /config/API_KEY_Example.php file as API_KEY.php.
 Then assign your Crowdmark API key to '$api_key` value.
+```php
+<?php
+// change this file to API_KEY.php
+namespace Waterloobae\CrowdmarkDashboard;
+$api_key = "Insert your Crowdmark API key here.";
+```
 
 In your PHP file,
 1. Include outoload file
