@@ -1,11 +1,47 @@
 # Crowdmark Dashboard
 
-## Release Notes : version 0.1
+## Instructions for Composer Package
+Install this package
+composer require waterloobae/CrowdmarkDashboard
+
+In your PHP file,
+1. Include outoload file
+   `require 'vendor/autoload.php';`
+2. Define name space
+   `namespace Waterloobae\CrowdmarkDashboard;`
+3. Create new Dashboard object and run getForm() method.
+   ```php
+   use Waterloobae\CrowdmarkDashboard\Dashboard;
+   $dashboard = new Dashboard();
+   $dashboard->getForm()   
+   ```
+    
+It will look like
+```php
+<?php
+namespace Waterloobae\CrowdmarkDashboard;
+require_once 'vendor/autoload.php';
+use Waterloobae\CrowdmarkDashboard\Dashboard;
+$dashboard = new Dashboard();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Crowdmark Dashboard</title>
+    </head>
+<body>
+  <?=$dashboard->getForm()?>
+</body>
+</html>
+```
+
+## Release Notes : version 1.00.0
+API call rate limiting of 10 requests per second is enforced.
+
 API call for responses is made for each booklet, that created around 2,500 API calls. As a result of that, it take around 30 minutes to create one Assessment. /api/responses/*response_id* is used for this.
 
 Instead of using /api/questions/question_id/responses. Multi curls for /api/booklets/booklet_id/responses are used. It reduces response time from 30 minutes to 2 minutes.
-
-Page.php needs to be coded.
 
 ## Crowdmark API Endpoints
 
