@@ -45,6 +45,15 @@ $dashboard = new Dashboard();
 </html>
 ```
 
+## Features
+1. Download cover pages or 2nd pages of selected courses.
+2. Generate student information csv file of selected courses
+3. Generate student email list csv file
+4. Generate CSV file of how many questions are graded for selected courses
+5. How many questions are graded for each graders are listed in CSV file
+6. How many booklets are uploaded and matched are listed for selected courses.
+7. It checks how many response are available for grading compared to the number of uploaded booklets to check integrity 
+
 ## Release Notes : version 1.00.0
 API call rate limiting of 10 requests per second is enforced.
 
