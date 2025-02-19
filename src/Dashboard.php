@@ -36,10 +36,10 @@ class Dashboard{
         $this->logger = new Logger();
         $this->engine = new Engine();
         //$this->setCrowdmark();
-        $this->writeAPIKEY();
         self::$thisPath = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
         self::$logDiv = $this->engine->render('logger_div');
         self::$head = $this->engine->render('head', ['_PATH' => self::$thisPath]);
+        $this->writeAPIKEY();
         $this->setForm();
     }
 
@@ -49,7 +49,7 @@ class Dashboard{
         if (file_exists($file_path)) {
             unlink($file_path);
         }
-        die($file_path);
+        die("__DIR__: ". __DIR__ . "StringLen: ". trlen($_SERVER['DOCUMENT_ROOT']) . "File Path: " .$file_path);
         $api_key_file = fopen($file_path, "w") or die("Unable to open file!");
         $txt  = "<?php\n";
         $txt .= "namespace Waterloobae\CrowdmarkDashboard;\n";
