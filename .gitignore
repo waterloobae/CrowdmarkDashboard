@@ -1,6 +1,5 @@
 composer.phar
 /vendor/
-/config/API_KEY.php
 Dockerfile
 docker-compose.yml
 /public/*.json

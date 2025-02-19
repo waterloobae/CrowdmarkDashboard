@@ -4,14 +4,18 @@
 Install this package
 `composer require waterloobae/crowdmarkdashboard`
 
-Copy /config/API_KEY_Example.php file as API_KEY.php.
-Then assign your Crowdmark API key to '$api_key` value.
-```php
-<?php
-// change this file to API_KEY.php
-namespace Waterloobae\CrowdmarkDashboard;
-$api_key = "Insert your Crowdmark API key here.";
+Make sure that your server environment variable for Crowdmark API is available.
+In Linux (.bashrc, .bash_profile, or CI/CD settings):
+`export CROWDMARK_API_KEY="your-secret-key"`
+
+For Docker (docker-compose.yml):
 ```
+environment:
+  - CROWDMARK_API_KEY=your-secret-key
+```
+
+For .env file (if using Laravel or Symfony):
+`CROWDMARK_API_KEY=your-secret-key`
 
 In your PHP file,
 1. Include outoload file
