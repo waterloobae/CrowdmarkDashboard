@@ -45,7 +45,7 @@ class Dashboard{
 
     public function writeAPIKEY(){
         $api_key = $this->api_key;
-        $file_path = self::$thisPath."../config/API_KEY.php";
+        $file_path = $this->getThisPath()."../config/API_KEY.php";
         if (file_exists($file_path)) {
             unlink($file_path);
         }
