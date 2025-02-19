@@ -8,7 +8,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require_once __DIR__ . '/../vendor/autoload.php';
 use Waterloobae\CrowdmarkDashboard\Dashboard;
-$dashboard = new Dashboard();
+$crowdmark_api_key = "your_crowdmark_api_key";
+$dashboard = new Dashboard($crowdmark_api_key);
 ?>
 <!DOCTYPE html>
 <html lang="en">
