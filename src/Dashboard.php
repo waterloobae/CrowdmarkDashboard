@@ -45,11 +45,11 @@ class Dashboard{
 
     public function writeAPIKEY(){
         $api_key = $this->api_key;
-        $file_path = $this->getThisPath()."../config/API_KEY.php";
+        $file_path = $this->getThisPath()."/../config/API_KEY.php";
         if (file_exists($file_path)) {
             unlink($file_path);
         }
-        die("__DIR__: ". __DIR__ . "StringLen: ". strlen($_SERVER['DOCUMENT_ROOT']) . "File Path: " .$file_path);
+        die("__DIR__: ". __DIR__ . "<br>Docuemnt_Root: ". $_SERVER['DOCUMENT_ROOT'] . "<br>File Path: " .$file_path);
         $api_key_file = fopen($file_path, "w") or die("Unable to open file!");
         $txt  = "<?php\n";
         $txt .= "namespace Waterloobae\CrowdmarkDashboard;\n";
