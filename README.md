@@ -34,9 +34,12 @@ It will look like
 ```php
 <?php
 namespace Waterloobae\CrowdmarkDashboard;
-require_once 'vendor/autoload.php';
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+include_once($_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php');
 use Waterloobae\CrowdmarkDashboard\Dashboard;
-$dashboard = new Dashboard();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,8 +48,11 @@ $dashboard = new Dashboard();
     <title>Crowdmark Dashboard</title>
     </head>
 <body>
-  <?=$dashboard->getForm()?>
-</body>
+    <?php
+        $crowdmark_api_key = "your Crowdmark API key";
+        $dashboard = new Dashboard($crowdmark_api_key);
+        $dashboard->getForm()
+    ?></body>
 </html>
 ```
 
