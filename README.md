@@ -5,6 +5,7 @@ Install this package
 `composer require waterloobae/crowdmarkdashboard`
 
 Make sure that your server environment variable for Crowdmark API is available.
+
 In Linux (.bashrc, .bash_profile, or CI/CD settings):
 `export CROWDMARK_API_KEY="your-secret-key"`
 
