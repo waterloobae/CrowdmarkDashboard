@@ -86,6 +86,7 @@ class Dashboard{
     }
 
     public function insertHead() {
+        die($this->engine->render('head_script', ['_Head' => self::$head]));
         return $this->engine->render('head_script', ['_Head' => self::$head]);
     }
 
