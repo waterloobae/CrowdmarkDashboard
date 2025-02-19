@@ -4,7 +4,7 @@
 Install this package
 `composer require waterloobae/crowdmarkdashboard`
 
-Make sure that your server environment variable for Crowdmark API is available.
+Make sure that your server environment variable for Crowdmark API is available for better security.
 
 In Linux (.bashrc, .bash_profile, or CI/CD settings):
 `export CROWDMARK_API_KEY="your-secret-key"`
@@ -26,7 +26,7 @@ In your PHP file,
 3. Create new Dashboard object and run getForm() method.
    ```php
    use Waterloobae\CrowdmarkDashboard\Dashboard;
-   $dashboard = new Dashboard();
+   $dashboard = new Dashboard('crowdmark api key');
    $dashboard->getForm()   
    ```
     

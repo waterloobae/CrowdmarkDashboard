@@ -12,6 +12,7 @@ use Waterloobae\CrowdmarkDashboard\API;
 class Dashboard{
     private object $logger;
     private object $crowdmark;
+    private object $api_key;
     private object $engine;
     private static $logDiv = "";
     private static $head = "";    
@@ -29,17 +30,33 @@ class Dashboard{
         "integritycheck" => "Generate Integrity Check Report"
     ];
     
-    public function __construct(){
+    public function __construct($api_key){
+        $this->api_key = $api_key;
         // constructor
         $this->logger = new Logger();
         $this->engine = new Engine();
         //$this->setCrowdmark();
+        $this->writeAPIKEY();
         self::$thisPath = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
         self::$logDiv = $this->engine->render('logger_div');
         self::$head = $this->engine->render('head', ['_PATH' => self::$thisPath]);
         $this->setForm();
     }
 
+    public function writeAPIKEY(){
+        $api_key = $this->api_key;
+        $file_path = "../config/API_KEY.php";
+        if (file_exists($file_path)) {
+            unlink($file_path);
+        }
+        $api_key_file = fopen($file_path, "w") or die("Unable to open file!");
+        $txt  = "<?php\n";
+        $txt .= "namespace Waterloobae\CrowdmarkDashboard;\n";
+        $txt
+        .=  "\$api_key = '$api_key';\n";
+        fwrite($api_key_file, $txt);
+        fclose($api_key_file);
+    }
     public function getForm(){
         return self::$form;
     }
