@@ -12,12 +12,12 @@ use Waterloobae\CrowdmarkDashboard\API;
 class Dashboard{
     private object $logger;
     private object $crowdmark;
-    private object $api_key;
     private object $engine;
     private static $logDiv = "";
     private static $head = "";    
     private static $thisPath = "";
     private static $form = "";
+    private string $api_key;
     private array  $actions = [
         "sayHello" => "Say Hello (Check API)",        
         "page_1" => "Download Cover Page",
