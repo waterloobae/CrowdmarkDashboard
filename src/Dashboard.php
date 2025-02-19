@@ -49,6 +49,7 @@ class Dashboard{
         if (file_exists($file_path)) {
             unlink($file_path);
         }
+        die($file_path);
         $api_key_file = fopen($file_path, "w") or die("Unable to open file!");
         $txt  = "<?php\n";
         $txt .= "namespace Waterloobae\CrowdmarkDashboard;\n";
