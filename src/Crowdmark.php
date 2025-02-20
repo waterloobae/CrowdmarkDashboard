@@ -16,11 +16,13 @@ class Crowdmark
     protected array $assessment_ids = [];
 
     protected object $api_response;
+    protected string $thisPath = "";
 
     public function __construct()
     {
         // constructor
         $this->logger = new Logger();
+        $this->setThisPath();
         $api = new API( $this->logger );
         $api->exec('api/courses');
         $this->api_response = $api->getResponse();
@@ -30,6 +32,17 @@ class Crowdmark
             $this->course_ids[] = $course_data->id;
         }
         $this->setAssessmentIDs();
+    }
+
+    public function setThisPath(){
+        $absolutePath = __FILE__; // Get the absolute path
+
+        // Locate project root by finding the vendor directory
+        $projectRoot = dirname(__DIR__, 3); // Moves up 3 levels: vendor/package/src -> vendor/package -> project root
+        
+        $thisPath = str_replace($projectRoot, '', $absolutePath);   
+        self::$thisPath = $thisPath;
+        return;
     }
 
     public function setAssessmentIDs()
@@ -53,7 +66,7 @@ class Crowdmark
     public function createDownloadLinks(string $type, array $course_names, string $page_number = null)
     {
         $valid_encoded_course_names = [];
-        $webRootPath = dirname($_SERVER['PHP_SELF']);
+        $webRootPath = $this->thisPath;
         
         ob_start();
         switch($type) {

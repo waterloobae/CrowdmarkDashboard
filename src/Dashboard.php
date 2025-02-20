@@ -36,7 +36,7 @@ class Dashboard{
         $this->logger = new Logger();
         $this->engine = new Engine();
         //$this->setCrowdmark();
-        self::$thisPath = dirname($_SERVER['PHP_SELF']);
+        self::$thisPath = $this->setThisPath();
         self::$logDiv = $this->engine->render('logger_div');
         self::$head = $this->engine->render('head', ['_PATH' => self::$thisPath]);
         $this->writeAPIKEY();
@@ -60,7 +60,8 @@ class Dashboard{
         fclose($api_key_file);
     }
     public function getForm(){
-        return self::$form;
+        echo self::$form;
+        return;
     }
     
     public function setForm(){
@@ -107,6 +108,17 @@ class Dashboard{
 
     public function getThisPath(){
         return self::$thisPath;
+    }
+
+    public function setThisPath(){
+        $absolutePath = __FILE__; // Get the absolute path
+
+        // Locate project root by finding the vendor directory
+        $projectRoot = dirname(__DIR__, 3); // Moves up 3 levels: vendor/package/src -> vendor/package -> project root
+        
+        $thisPath = str_replace($projectRoot, '', $absolutePath);   
+        self::$thisPath = $thisPath;
+        return;
     }
 
     public function getCourseFilterChipList(){
