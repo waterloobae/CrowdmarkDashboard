@@ -16,7 +16,7 @@ class Crowdmark
     protected array $assessment_ids = [];
 
     protected object $api_response;
-    protected string $thisPath = "";
+    protected static $thisPath = "";
 
     public function __construct()
     {
