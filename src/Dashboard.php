@@ -36,7 +36,7 @@ class Dashboard{
         $this->logger = new Logger();
         $this->engine = new Engine();
         //$this->setCrowdmark();
-        self::$thisPath = $this->setThisPath();
+        $this->setThisPath();
         self::$logDiv = $this->engine->render('logger_div');
         self::$head = $this->engine->render('head', ['_PATH' => self::$thisPath]);
         $this->writeAPIKEY();
