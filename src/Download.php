@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 if (strpos(__DIR__, '/workspaces') !== false) {
     require_once '/workspaces/vendor/autoload.php';
 }else{
-    require_once '/vendor/autoload.php';
+    require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 }
 
 use Waterloobae\CrowdmarkDashboard\Crowdmark;
