@@ -35,13 +35,15 @@ class Crowdmark
     }
 
     public function setThisPath(){
-        $absolutePath = __FILE__; // Get the absolute path
-
-        // Locate project root by finding the vendor directory
-        $projectRoot = dirname(__DIR__, 3); // Moves up 3 levels: vendor/package/src -> vendor/package -> project root
-        
-        $thisPath = str_replace($projectRoot, '', $absolutePath);   
-        self::$thisPath = $thisPath;
+        if (strpos(__DIR__, $_SERVER['DOCUMENT_ROOT']) !== false) {
+            $absolutePath = str_replace($_SERVER['DOCUMENT_ROOT'], '', __DIR__);
+        } else {
+            $dir = __DIR__;
+            $parts = explode(DIRECTORY_SEPARATOR, trim($dir, DIRECTORY_SEPARATOR));
+            array_shift($parts); // Remove the first (top-most) directory
+            $absolutePath = DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $parts);
+        }
+        self::$thisPath = $absolutePath;
         return;
     }
 
