@@ -68,7 +68,7 @@ class Crowdmark
     public function createDownloadLinks(string $type, array $course_names, string $page_number = null)
     {
         $valid_encoded_course_names = [];
-        $webRootPath = $this->thisPath;
+        $webRootPath = self::$thisPath;
         
         ob_start();
         switch($type) {
