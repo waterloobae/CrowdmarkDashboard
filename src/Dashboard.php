@@ -30,17 +30,19 @@ class Dashboard{
         "integritycheck" => "Generate Integrity Check Report"
     ];
     
-    public function __construct($api_key){
+    public function __construct($api_key, bool $isSetForm = true){
         $this->api_key = $api_key;
         // constructor
         $this->logger = new Logger();
         $this->engine = new Engine();
         //$this->setCrowdmark();
-        self::$thisPath = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
+        self::$thisPath = dirname($_SERVER['PHP_SELF']);
         self::$logDiv = $this->engine->render('logger_div');
         self::$head = $this->engine->render('head', ['_PATH' => self::$thisPath]);
         $this->writeAPIKEY();
-        $this->setForm();
+        if($isSetForm){
+            $this->setForm();
+        }
     }
 
     public function writeAPIKEY(){
@@ -79,6 +81,7 @@ class Dashboard{
     
     public function echoLoggerDiv() {
         echo $this->getLogDiv();
+        return;
     }
 
     public function echoLoggerMessage() {
@@ -86,18 +89,13 @@ class Dashboard{
     }
 
     public function insertHead() {
-        die($this->engine->render('head_script', ['_Head' => self::$head]));
-        return $this->engine->render('head_script', ['_Head' => self::$head]);
+        echo($this->engine->render('head_script', ['_Head' => self::$head]));
+        return;
     }
 
     public function getCrowdmark(){
         return $this->crowdmark;
     }
-
-    // Validations
-    // 1. API_KEY.php exists
-    // 2. $api_key is set
-    // 3. API returns 200 response
 
     public function getEngine(){
         return $this->engine;

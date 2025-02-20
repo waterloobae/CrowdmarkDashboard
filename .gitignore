@@ -2,6 +2,7 @@ composer.phar
 /vendor/
 Dockerfile
 docker-compose.yml
+/config/API_KEY.php
 /public/*.json
 /public/*.csv
 /public/*.pdf
