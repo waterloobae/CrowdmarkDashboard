@@ -99,9 +99,17 @@ class Assessment{
     //This sets Graders and Pages
     public function setResponses($booklets)
     {
+        if(empty($booklets)) {
+            return;
+        }
+        
         $dup_grader_ids = [];
         foreach($booklets as $booklet){
             $end_points[] = 'api/booklets/' . $booklet->getBookletId() . '/responses';
+        }
+
+        if(empty($end_points)) {
+            return;
         }
 
         $api = new API( $this->logger );

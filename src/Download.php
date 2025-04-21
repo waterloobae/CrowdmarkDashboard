@@ -31,6 +31,10 @@ class Download{
         $this->assessment_ids = $this->crowdmark->returnAssessmentIDs($this->course_names);
     }
 
+    public function getAssesmentIDs(){
+        return $this->assessment_ids;
+    }
+
     public function downloadPage() {
         $this->crowdmark->downloadPagesByPageNumber($this->assessment_ids, $this->page_number);
     }

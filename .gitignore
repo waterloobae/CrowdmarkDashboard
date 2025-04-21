@@ -1,4 +1,5 @@
 composer.phar
+/debug/
 /vendor/
 Dockerfile
 docker-compose.yml

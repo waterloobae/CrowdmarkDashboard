@@ -2,7 +2,8 @@
 namespace Waterloobae\CrowdmarkDashboard;
 require_once __DIR__ . '/../vendor/autoload.php';
 use Waterloobae\CrowdmarkDashboard\Crowdmark;
-$crowdmark = new Crowdmark();
+$crowdmark_api_key = "your_crowdmark_api_key";
+$dashboard = new Dashboard($crowdmark_api_key);
 
 echo "<h1>Check Response Count</h1>";
 echo "<p>Check the response count of the booklets</p>";

@@ -9,7 +9,8 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once __DIR__ . '/../vendor/autoload.php';
 use Waterloobae\CrowdmarkDashboard\Crowdmark;
-$crowdmark = new Crowdmark();
+$crowdmark_api_key = "your_crowdmark_api_key";
+$dashboard = new Dashboard($crowdmark_api_key);
 
 echo "<h1>Downloading Pages</h1>";
 echo "<p>Download the pages of the booklets</p>";

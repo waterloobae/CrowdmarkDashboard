@@ -65,7 +65,7 @@ class Crowdmark
         return $assessment_ids;
     }
 
-    public function createDownloadLinks(string $type, array $course_names, string $page_number = null)
+    public function createDownloadLinks(string $type, array $course_names, ?string $page_number = null)
     {
         $valid_encoded_course_names = [];
         $webRootPath = self::$thisPath;
@@ -222,7 +222,7 @@ class Crowdmark
             }
         }
         
-         foreach ($graded_counts as &$subarray) {
+        foreach ($graded_counts as &$subarray) {
             if (is_array($subarray)) {
                 ksort($subarray);
             }
@@ -237,12 +237,18 @@ class Crowdmark
         
         // Get headers from the first subarray
         $headers = ['Course'];
+        
+
         foreach($graded_counts as $firstSubarray) {
             if(is_array($firstSubarray)){
                 break;
             }
         }
-        $headers = array_merge($headers, array_keys($firstSubarray));
+
+        if(!empty($firstSubarray)) {
+            $headers = array_merge($headers, array_keys($firstSubarray));
+        }
+
         fputcsv($output, $headers);
 
         foreach ($graded_counts as $course => $counts) {
