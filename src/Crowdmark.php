@@ -1,6 +1,8 @@
 <?php
-
 namespace Waterloobae\CrowdmarkDashboard;
+
+include_once 'Logger.php';
+
 use Waterloobae\CrowdmarkDashboard\API;
 use Waterloobae\CrowdmarkDashboard\Course;
 use Waterloobae\CrowdmarkDashboard\Assessment;
@@ -35,8 +37,14 @@ class Crowdmark
     }
 
     public function setThisPath(){
-        if (strpos(__DIR__, $_SERVER['DOCUMENT_ROOT']) !== false) {
-            $absolutePath = str_replace($_SERVER['DOCUMENT_ROOT'], '', __DIR__);
+        if (function_exists('base_path')) {
+            $this_site_root = base_path();
+        } else {
+            $this_site_root = $_SERVER['DOCUMENT_ROOT'];
+        }
+
+        if (strpos(__DIR__, $this_site_root) !== false) {
+            $absolutePath = str_replace($this_site_root, '', __DIR__);
         } else {
             $dir = __DIR__;
             $parts = explode(DIRECTORY_SEPARATOR, trim($dir, DIRECTORY_SEPARATOR));

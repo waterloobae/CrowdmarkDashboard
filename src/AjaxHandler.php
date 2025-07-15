@@ -10,8 +10,13 @@ if (session_status() === PHP_SESSION_NONE) {
 if (strpos(__DIR__, '/workspaces') !== false) {
     require_once '/workspaces/vendor/autoload.php';
 }else{
-    require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
+    if (function_exists('base_path')) {
+        $this_site_root = base_path();
+    } else {
+        $this_site_root = $_SERVER['DOCUMENT_ROOT'];
+    }
 }
+require_once $this_site_root . '/vendor/autoload.php';
 
 use Waterloobae\CrowdmarkDashboard\Crowdmark;
 

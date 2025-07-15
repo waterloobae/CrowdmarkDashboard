@@ -1,5 +1,6 @@
 <?php
 namespace Waterloobae\CrowdmarkDashboard;
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 } elseif (session_status() !== PHP_SESSION_ACTIVE) {
