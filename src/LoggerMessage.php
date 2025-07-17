@@ -6,7 +6,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_destroy();
     session_start();
 }
-header('Content-Type: application/json');
-echo json_encode(["error_msg" => $_SESSION['crowdmark_dashboard']['error_msg'] ?? "NA",
-    "warning_msg" => $_SESSION['crowdmark_dashboard']['warning_msg'] ?? "NA",
-    "info_msg" => $_SESSION['crowdmark_dashboard']['info_msg'] ?? "NA"]);
+// This file is used to log messages and errors in the Crowdmark Dashboard application.
+// header('Content-Type: application/json');
+// echo json_encode(["error_msg" => $_SESSION['crowdmark_dashboard']['error_msg'] ?? "NA", "warning_msg" => $_SESSION['crowdmark_dashboard']['warning_msg'] ?? "NA", "info_msg" => $_SESSION['crowdmark_dashboard']['info_msg'] ?? "NA"]);
