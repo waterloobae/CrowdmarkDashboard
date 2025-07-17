@@ -29,5 +29,6 @@
             });
     }
     // Run `updateLoggerMessage` every second
-    let updateLoggerMessageInterval = setInterval(updateLoggerMessage, 1000);
+    // This is commented out to prevent continuous updates, uncomment if needed
+    // let updateLoggerMessageInterval = setInterval(updateLoggerMessage, 1000);
 </script>
