@@ -133,8 +133,13 @@ class Dashboard{
         $api = new API( $this->logger );
         $api->exec('api/courses');
         $apiResponses= $api->getResponse();
+        $iteration_count = 0;
         foreach ($apiResponses->data as $apiResponse){
+            if ($iteration_count >= 50) {
+                break;
+            }
             $courseNames[] = $apiResponse->attributes->name;
+            $iteration_count++;
         }
 
         $chips = [];
