@@ -7,13 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 if (strpos(__DIR__, '/workspaces') !== false) {
     require_once '/workspaces/vendor/autoload.php';
 }else{
-
-    if (function_exists('base_path')) {
-        $this_site_root = base_path();
-    } else {
-        $this_site_root = $_SERVER['DOCUMENT_ROOT'];
-    }
-    
+    $this_site_root = $_SERVER['DOCUMENT_ROOT'];
     require_once $this_site_root.'/vendor/autoload.php';
 }
 
@@ -32,9 +26,9 @@ class Download{
     }
 
     public function setParams(){
-        $this->course_names = explode("~",$_GET['course_name']);
-        $this->page_number = $_GET['page_number'];    
-        $this->link_type = $_GET['type'];
+        $this->course_names = isset($_GET['course_name']) && $_GET['course_name'] !== null ? explode("~", $_GET['course_name']) : [];
+        $this->page_number = $_GET['page_number'] ?? "NA";    
+        $this->link_type = $_GET['type'] ?? "NA";
         $this->assessment_ids = $this->crowdmark->returnAssessmentIDs($this->course_names);
     }
 

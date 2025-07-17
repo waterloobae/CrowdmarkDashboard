@@ -31,15 +31,16 @@ class Dashboard{
     ];
     
     public function __construct($api_key, bool $isSetForm = true){
-        $this->api_key = $api_key;
         // constructor
+        $this->api_key = $api_key;
+        $this->writeAPIKEY();
+        
         $this->logger = new Logger();
         $this->engine = new Engine();
         //$this->setCrowdmark();
         $this->setThisPath();
         self::$logDiv = $this->engine->render('logger_div');
         self::$head = $this->engine->render('head', ['_PATH' => self::$thisPath]);
-        $this->writeAPIKEY();
         if($isSetForm){
             $this->setForm();
         }
