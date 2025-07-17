@@ -111,12 +111,9 @@ class Dashboard{
     }
 
     public function setThisPath(){
-            if (function_exists('base_path')) {
-            $this_site_root = base_path();
-        } else {
-            $this_site_root = $_SERVER['DOCUMENT_ROOT'];
-        }
-
+            
+        $this_site_root = $_SERVER['DOCUMENT_ROOT'];
+        
         if (strpos(__DIR__, $this_site_root) !== false) {
             $absolutePath = str_replace($this_site_root, '', __DIR__);
         } else {

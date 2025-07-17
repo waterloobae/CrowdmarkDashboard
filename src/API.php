@@ -30,25 +30,19 @@ class API
 
     public function buildApiKeyString()
     {
-        if(env('CROWDMARK_API_KEY'))    {
-            
-            $api_key = env('CROWDMARK_API_KEY');
-            $this->api_key_string = 'api_key=' . $api_key;
-        } else {
-                        
-            $apiKeyFile = __DIR__ . '/../config/API_KEY.php';
-            if (!file_exists($apiKeyFile)) {
-                die("error: API key file does not exist, " . $apiKeyFile .". Please create one by copying API_KEY_Example.php to API_KEY.php.");
-            }
-            
-            require $apiKeyFile;
-            
-            if (!isset($api_key)) {
-                die("error: API key is not set correctly in ". $apiKeyFile . ". Please set the API key, \$api_key, in the API_KEY.php file.");
-            }
-            
-            $this->api_key_string = 'api_key=' . $api_key;
+        $apiKeyFile = __DIR__ . '/../config/API_KEY.php';
+        if (!file_exists($apiKeyFile)) {
+            die("error: API key file does not exist, " . $apiKeyFile .". Please create one by copying API_KEY_Example.php to API_KEY.php.");
         }
+        
+        require $apiKeyFile;
+        
+        if (!isset($api_key)) {
+            die("error: API key is not set correctly in ". $apiKeyFile . ". Please set the API key, \$api_key, in the API_KEY.php file.");
+        }
+        
+        $this->api_key_string = 'api_key=' . $api_key;
+        
     }
 
     public function exec(string $end_point){
